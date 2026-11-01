@@ -39,14 +39,14 @@ class Handler(SimpleHTTPRequestHandler):
     def do_GET(self):
         u=urlparse(self.path);q=parse_qs(u.query)
         if u.path=='/api/providers':return self.send_json([{'id':p.id,'name':p.name} for p in PROVIDERS.values()])
-        if u.path=='/health':return self.send_json({'status':'ok','version':'2026.11.01.1'})
+        if u.path=='/health':return self.send_json({'status':'ok','version':'2026.11.01.3'})
         if u.path=='/api/menu':
             try:
                 data=load_menu(q.get('provider',['strava'])[0],q.get('canteen',[''])[0]);today=datetime.now(ZoneInfo('Europe/Prague')).date().isoformat()
                 data={**data,'today':today,'days':[d for d in data['days'] if d['date']>=today]}
                 return self.send_json(data)
             except MenuError as error:return self.send_json({'detail':str(error)},422)
-        allowed={'/':'index.html','/index.html':'index.html','/config':'config.html','/config.html':'config.html','/menu.js':'menu.js','/menu.css':'menu.css','/config.js':'config.js','/favicon.svg':'favicon.svg'}
+        allowed={'/':'index.html','/index.html':'index.html','/config':'config.html','/config.html':'config.html','/meal-model.js':'meal-model.js','/menu.js':'menu.js','/menu.css':'menu.css','/config.js':'config.js','/favicon.svg':'favicon.svg'}
         if u.path not in allowed:return self.send_error(404)
         self.path='/'+allowed[u.path]
         super().do_GET()

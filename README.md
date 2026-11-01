@@ -21,6 +21,14 @@ v paměti procesu, po restartu se data stáhnou znovu.
 Dokumentace poskytovatele:
 https://www.strava.cz/strava/napoveda/cz/prilohy/Odkaz_na_XML_jidelnicek.pdf
 
+## Prezentace jídelníčku
+
+`presentation=day` zobrazí nejbližší den. `presentation=overview&days=5` vytvoří
+přehled po dnech. Staré odkazy s `days=1` nadále volí denní nabídku.
+Ikony rozlišují snídani, polévku, oběd a jeho varianty, večeři, svačinu,
+nápoje, ovoce, zeleninu, dezert a ostatní. Rozdělení doplňku zachovává původní
+rozsah alergenů. Malé segmenty zobrazují jejich číselné kódy.
+
 ## Ověření
 
 `python -m unittest discover -s tests -v`
