@@ -28,5 +28,10 @@ https://www.strava.cz/strava/napoveda/cz/prilohy/Odkaz_na_XML_jidelnicek.pdf
 ## Stav
 
 Lokální prototyp; nastavení lze uložit v prohlížeči a přenášet odkazem.
-`render.yaml` připravuje veřejnou službu. Před zařazením do produkčního katalogu
-zbývá vytvořit repozitář, nasadit službu a připojit sdílené profily na OneDrive.
+Repozitář: https://github.com/pborovicka72-dotcom/eduvize-jidelnicek
+
+Aplikace je zařazena do správy aplikací a katalogu kiosku s lokální adresou
+na portu 8790. Služba musí běžet na počítači, kde se kiosek zobrazuje.
+`render.yaml` připravuje veřejnou službu na bezplatném plánu. Zbývá dokončit
+přihlášení k Renderu, službu nasadit a přepnout odkazy z lokální na veřejnou
+adresu. Ukládání nastavení na OneDrive zatím není připojeno.
