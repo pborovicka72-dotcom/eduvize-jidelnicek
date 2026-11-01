@@ -16,7 +16,7 @@ Konektory implementují `id`, `name`, `fetch(canteen)` a vracejí normalizované
 jídla, skupiny a původní údaje o alergenech. Registr je v `app.py`.
 Cache 15 minut, souběžné dotazy na stejnou jídelnu sdílejí stažení. Při výpadku
 se nejvýše 24 hodin použijí poslední data s viditelným upozorněním. Cache je
-v paměti procesu, po restartu se data stáhnou znovu.
+v paměti procesu; po restartu ji může naplnit poslední platný noční snímek.
 
 Dokumentace poskytovatele:
 https://www.strava.cz/strava/napoveda/cz/prilohy/Odkaz_na_XML_jidelnicek.pdf
@@ -48,3 +48,19 @@ Lokální běh zůstává dostupný pro vývoj.
 
 Nastavení lze uložit v prohlížeči a přenášet odkazem. Ukládání nastavení na
 OneDrive zatím není připojeno.
+
+## Noční obnova
+
+Workflow `.github/workflows/nightly-menu.yml` stahuje jídelníčky nezávisle na otevřené
+stránce, obvykle kolem 02:17 Europe/Prague. Čas spuštění GitHub Actions může být
+opožděný. UTC sloty 00:17, 01:17 a 02:17 spolu s kontrolou českého data pokrývají
+letní/zimní čas; při jarním přeskočení 02:00 proběhne obnova po 03:00.
+Další sloty jsou opakováním při selhání, každé stažení má navíc čtyři pokusy.
+Po úspěchu se uloží veřejný snímek `data/nightly-menu.json` a Render jej automaticky
+nasadí. Selhání zdroje starý snímek nepřepíše. Platnost zálohy je nejvýše 24 hodin.
+Přes den zůstává obnova stránky po 5 minutách a zdroje po 15 minutách.
+
+Seznam automaticky načítaných jídelen je v `nightly-sources.json`, nyní Strava.cz
+11592. Jiné číslo zadané pouze v odkazu se do tohoto seznamu samo nezapíše.
+Při přidání další školy je nutné doplnit i tento seznam.
+Workflow lze spustit ručně tlačítkem Run workflow (vynutí stažení i mimo noční čas).

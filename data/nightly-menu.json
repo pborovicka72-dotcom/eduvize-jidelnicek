@@ -1,0 +1,488 @@
+{
+  "schemaVersion": 1,
+  "menus": {
+    "strava:11592": {
+      "provider": "strava",
+      "canteen": "11592",
+      "source": "https://www.strava.cz/strava5/Jidelnicky/XML?zarizeni=11592",
+      "days": [
+        {
+          "date": "2026-11-02",
+          "meals": [
+            {
+              "name": "Polévka selská bramborová",
+              "group": "Polévka",
+              "allergens": "01 -Obiloviny obsahující lepek,07 -Mléko,09 -Celer"
+            },
+            {
+              "name": "Rizoto s masem a sýrem",
+              "group": "Oběd 1",
+              "allergens": "01 -Obiloviny obsahující lepek,07 -Mléko,09 -Celer"
+            },
+            {
+              "name": "Žampióny plněné, Brambor",
+              "group": "Oběd 2",
+              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer"
+            },
+            {
+              "name": "Čaj ovocný, Mléko, Ochucené mléko,Voda, Ovoce, Zelenina",
+              "group": "Doplněk",
+              "allergens": "07 -Mléko"
+            }
+          ]
+        },
+        {
+          "date": "2026-11-03",
+          "meals": [
+            {
+              "name": "Hovězí polévka s játrovou zavářkou",
+              "group": "Polévka",
+              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer"
+            },
+            {
+              "name": "Hovězí svíčková na smetaně, Houskové knedlíky, Kompot brusinkový",
+              "group": "Oběd 1",
+              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer,10 -Hořčice"
+            },
+            {
+              "name": "Špagety s česnekem a sýrem",
+              "group": "Oběd 2",
+              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer"
+            },
+            {
+              "name": "Čaj ovocný, Mléko, Ovoce, Voda, Zeleninová obloha",
+              "group": "Doplněk",
+              "allergens": "07 -Mléko"
+            }
+          ]
+        },
+        {
+          "date": "2026-11-04",
+          "meals": [
+            {
+              "name": "Zeleninová polévka s luštěninou",
+              "group": "Polévka",
+              "allergens": "01 -Obiloviny obsahující lepek,07 -Mléko,09 -Celer"
+            },
+            {
+              "name": "Vepřová pečeně na česneku, Dušený špenát, Bramborový knedlík",
+              "group": "Oběd 1",
+              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer"
+            },
+            {
+              "name": "Sýrová omáčka, Gnocchi",
+              "group": "Oběd 2",
+              "allergens": "01 -Obiloviny obsahující lepek,07 -Mléko,09 -Celer"
+            },
+            {
+              "name": "Čaj ovocný, Mléko, Ochucené mléko,Voda, Ovoce, Zelenina",
+              "group": "Doplněk",
+              "allergens": "07 -Mléko"
+            }
+          ]
+        },
+        {
+          "date": "2026-11-05",
+          "meals": [
+            {
+              "name": "Polévka slepičí s celestýnskými nudlemi",
+              "group": "Polévka",
+              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer"
+            },
+            {
+              "name": "Kuřecí špíz na plechu, Americké brambory, Dětská tatarská omáčka",
+              "group": "Oběd 1",
+              "allergens": "03 -Vejce,07 -Mléko,09 -Celer,10 -Hořčice"
+            },
+            {
+              "name": "Těstoviny se zeleninou, zapečené, Okurka sterilovaná",
+              "group": "Oběd 2",
+              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer,10 -Hořčice"
+            },
+            {
+              "name": "Čaj ovocný, Mléko, Ovoce, Voda, Zeleninová obloha",
+              "group": "Doplněk",
+              "allergens": "07 -Mléko"
+            }
+          ]
+        },
+        {
+          "date": "2026-11-06",
+          "meals": [
+            {
+              "name": "Polévka květáková",
+              "group": "Polévka",
+              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer"
+            },
+            {
+              "name": "Dukátové buchtičky s krémem",
+              "group": "Oběd 1",
+              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko"
+            },
+            {
+              "name": "Pečené papriky plněné sýrem, Brambor",
+              "group": "Oběd 2",
+              "allergens": "03 -Vejce,07 -Mléko,09 -Celer"
+            },
+            {
+              "name": "Čaj ovocný, Mléko, Ochucené mléko, Voda, Mléčný pátek",
+              "group": "Doplněk",
+              "allergens": "07 -Mléko"
+            }
+          ]
+        },
+        {
+          "date": "2026-11-09",
+          "meals": [
+            {
+              "name": "Polévka",
+              "group": "Polévka",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd",
+              "group": "Oběd 1",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd 2",
+              "group": "Oběd 2",
+              "allergens": ""
+            },
+            {
+              "name": "Doplněk",
+              "group": "Doplněk",
+              "allergens": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-11-10",
+          "meals": [
+            {
+              "name": "Polévka",
+              "group": "Polévka",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd",
+              "group": "Oběd 1",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd 2",
+              "group": "Oběd 2",
+              "allergens": ""
+            },
+            {
+              "name": "Doplněk",
+              "group": "Doplněk",
+              "allergens": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-11-11",
+          "meals": [
+            {
+              "name": "Polévka",
+              "group": "Polévka",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd",
+              "group": "Oběd 1",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd 2",
+              "group": "Oběd 2",
+              "allergens": ""
+            },
+            {
+              "name": "Doplněk",
+              "group": "Doplněk",
+              "allergens": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-11-12",
+          "meals": [
+            {
+              "name": "Polévka",
+              "group": "Polévka",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd",
+              "group": "Oběd 1",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd 2",
+              "group": "Oběd 2",
+              "allergens": ""
+            },
+            {
+              "name": "Doplněk",
+              "group": "Doplněk",
+              "allergens": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-11-13",
+          "meals": [
+            {
+              "name": "Polévka",
+              "group": "Polévka",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd",
+              "group": "Oběd 1",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd 2",
+              "group": "Oběd 2",
+              "allergens": ""
+            },
+            {
+              "name": "Doplněk",
+              "group": "Doplněk",
+              "allergens": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-11-18",
+          "meals": [
+            {
+              "name": "Polévka",
+              "group": "Polévka",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd",
+              "group": "Oběd 1",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd 2",
+              "group": "Oběd 2",
+              "allergens": ""
+            },
+            {
+              "name": "Doplněk",
+              "group": "Doplněk",
+              "allergens": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-11-19",
+          "meals": [
+            {
+              "name": "Polévka",
+              "group": "Polévka",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd",
+              "group": "Oběd 1",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd 2",
+              "group": "Oběd 2",
+              "allergens": ""
+            },
+            {
+              "name": "Doplněk",
+              "group": "Doplněk",
+              "allergens": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-11-20",
+          "meals": [
+            {
+              "name": "Polévka",
+              "group": "Polévka",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd",
+              "group": "Oběd 1",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd 2",
+              "group": "Oběd 2",
+              "allergens": ""
+            },
+            {
+              "name": "Doplněk",
+              "group": "Doplněk",
+              "allergens": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-11-23",
+          "meals": [
+            {
+              "name": "Polévka",
+              "group": "Polévka",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd",
+              "group": "Oběd 1",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd 2",
+              "group": "Oběd 2",
+              "allergens": ""
+            },
+            {
+              "name": "Doplněk",
+              "group": "Doplněk",
+              "allergens": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-11-24",
+          "meals": [
+            {
+              "name": "Polévka",
+              "group": "Polévka",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd",
+              "group": "Oběd 1",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd 2",
+              "group": "Oběd 2",
+              "allergens": ""
+            },
+            {
+              "name": "Doplněk",
+              "group": "Doplněk",
+              "allergens": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-11-25",
+          "meals": [
+            {
+              "name": "Polévka",
+              "group": "Polévka",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd",
+              "group": "Oběd 1",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd 2",
+              "group": "Oběd 2",
+              "allergens": ""
+            },
+            {
+              "name": "Doplněk",
+              "group": "Doplněk",
+              "allergens": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-11-26",
+          "meals": [
+            {
+              "name": "Polévka",
+              "group": "Polévka",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd",
+              "group": "Oběd 1",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd 2",
+              "group": "Oběd 2",
+              "allergens": ""
+            },
+            {
+              "name": "Doplněk",
+              "group": "Doplněk",
+              "allergens": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-11-27",
+          "meals": [
+            {
+              "name": "Polévka",
+              "group": "Polévka",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd",
+              "group": "Oběd 1",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd 2",
+              "group": "Oběd 2",
+              "allergens": ""
+            },
+            {
+              "name": "Doplněk",
+              "group": "Doplněk",
+              "allergens": ""
+            }
+          ]
+        },
+        {
+          "date": "2026-11-30",
+          "meals": [
+            {
+              "name": "Polévka",
+              "group": "Polévka",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd",
+              "group": "Oběd 1",
+              "allergens": ""
+            },
+            {
+              "name": "Oběd 2",
+              "group": "Oběd 2",
+              "allergens": ""
+            },
+            {
+              "name": "Doplněk",
+              "group": "Doplněk",
+              "allergens": ""
+            }
+          ]
+        }
+      ],
+      "updated": 1793563359.685514
+    }
+  }
+}

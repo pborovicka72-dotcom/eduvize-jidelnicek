@@ -16,12 +16,25 @@ CACHE={}
 LOCKS=[threading.Lock() for _ in range(16)]
 TTL=900
 
+def read_snapshot(provider, canteen):
+    try:
+        payload=json.loads((ROOT/'data'/'nightly-menu.json').read_text())
+        record=payload['menus'][provider+':'+canteen]
+        age=time.time()-record['updated']
+        if 0<=age<86400 and isinstance(record['days'],list):return record
+    except (OSError,ValueError,KeyError,TypeError):
+        pass
+    return None
+
 def load_menu(provider,canteen):
     if provider not in PROVIDERS:raise MenuError('Vyberte podporovanou službu jídelníčku.')
     if not re.fullmatch(r'\d{4,6}',canteen):raise MenuError('Číslo jídelny musí mít 4 až 6 číslic.')
     key=(provider,canteen)
     with LOCKS[hash(key)%len(LOCKS)]:
         cached=CACHE.get(key);now=time.time()
+        if cached is None:
+            cached=read_snapshot(provider,canteen)
+            if cached:CACHE[key]=cached
         if cached and now-cached['updated']<TTL:return {**cached,'cached':True,'stale':False}
         try:
             data={**PROVIDERS[provider].fetch(canteen),'updated':now}
@@ -39,7 +52,7 @@ class Handler(SimpleHTTPRequestHandler):
     def do_GET(self):
         u=urlparse(self.path);q=parse_qs(u.query)
         if u.path=='/api/providers':return self.send_json([{'id':p.id,'name':p.name} for p in PROVIDERS.values()])
-        if u.path=='/health':return self.send_json({'status':'ok','version':'2026.11.01.3'})
+        if u.path=='/health':return self.send_json({'status':'ok','version':'2026.11.01.4'})
         if u.path=='/api/menu':
             try:
                 data=load_menu(q.get('provider',['strava'])[0],q.get('canteen',[''])[0]);today=datetime.now(ZoneInfo('Europe/Prague')).date().isoformat()

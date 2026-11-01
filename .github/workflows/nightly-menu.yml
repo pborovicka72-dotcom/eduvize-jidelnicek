@@ -1,0 +1,41 @@
+name: Nightly menu refresh
+on:
+  schedule:
+    # UTC slots cover Prague summer/winter time and retries, including DST change.
+    # The Python gate permits one successful refresh per Czech calendar day after 02:00.
+    - cron: '17 0,1,2 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: nightly-menu
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - name: Fetch public menus with retries
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" = workflow_dispatch ]; then
+            python refresh_nightly.py --force
+          else
+            python refresh_nightly.py
+          fi
+      - name: Persist snapshot and deploy it to Render
+        run: |
+          if [ ! -f data/nightly-menu.json ]; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/nightly-menu.json
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Refresh public menus for the next school day'
+          git pull --rebase origin main
+          git push origin HEAD:main

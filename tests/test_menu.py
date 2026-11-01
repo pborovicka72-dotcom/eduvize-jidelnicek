@@ -14,7 +14,7 @@ class Tests(unittest.TestCase):
   with self.assertRaises(MenuError):app.load_menu('unknown','11592')
  def test_cached(self):
   app.CACHE.clear()
-  with patch.object(app.PROVIDERS['strava'],'fetch',return_value={'days':parse_menu(XML)}) as fetch:
+  with patch.object(app,'read_snapshot',return_value=None),patch.object(app.PROVIDERS['strava'],'fetch',return_value={'days':parse_menu(XML)}) as fetch:
    app.load_menu('strava','11592');self.assertTrue(app.load_menu('strava','11592')['cached']);self.assertEqual(fetch.call_count,1)
  def test_last_good_on_failure(self):
   app.CACHE[('strava','11592')]={'days':parse_menu(XML),'updated':app.time.time()-1000}
