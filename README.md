@@ -25,13 +25,18 @@ https://www.strava.cz/strava/napoveda/cz/prilohy/Odkaz_na_XML_jidelnicek.pdf
 
 `python -m unittest discover -s tests -v`
 
-## Stav
+## Veřejné nasazení
 
-Lokální prototyp; nastavení lze uložit v prohlížeči a přenášet odkazem.
+Administrace: https://eduvize-jidelnicek.onrender.com/config.html
+
+Běžná stránka: https://eduvize-jidelnicek.onrender.com/index.html?viewMode=web&canteen=11592
+
 Repozitář: https://github.com/pborovicka72-dotcom/eduvize-jidelnicek
 
-Aplikace je zařazena do správy aplikací a katalogu kiosku s lokální adresou
-na portu 8790. Služba musí běžet na počítači, kde se kiosek zobrazuje.
-`render.yaml` připravuje veřejnou službu na bezplatném plánu. Zbývá dokončit
-přihlášení k Renderu, službu nasadit a přepnout odkazy z lokální na veřejnou
-adresu. Ukládání nastavení na OneDrive zatím není připojeno.
+Služba běží na Renderu (Free, Frankfurt). Správa aplikací i katalog kiosku
+používají tuto veřejnou adresu. Staré lokální odkazy na portu 8790 kiosek
+rozpozná a převede na veřejný výstup se zachováním parametrů jídelny.
+Lokální běh zůstává dostupný pro vývoj.
+
+Nastavení lze uložit v prohlížeči a přenášet odkazem. Ukládání nastavení na
+OneDrive zatím není připojeno.
