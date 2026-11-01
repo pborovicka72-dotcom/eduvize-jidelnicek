@@ -23,11 +23,20 @@ https://www.strava.cz/strava/napoveda/cz/prilohy/Odkaz_na_XML_jidelnicek.pdf
 
 ## Prezentace jídelníčku
 
-`presentation=day` zobrazí nejbližší den. `presentation=overview&days=5` vytvoří
-přehled po dnech. Staré odkazy s `days=1` nadále volí denní nabídku.
-Ikony rozlišují snídani, polévku, oběd a jeho varianty, večeři, svačinu,
-nápoje, ovoce, zeleninu, dezert a ostatní. Rozdělení doplňku zachovává původní
-rozsah alergenů. Malé segmenty zobrazují jejich číselné kódy.
+`presentation=day` zobrazí nejbližší celý den. `presentation=overview&days=5`
+zobrazí první dva dny společně, pokud se vejdou; zbývající dny se řadí po 1–3.
+Malé segmenty mají jeden celý den na stránku. Staré odkazy s `days=1` zůstávají platné.
+
+Stránkuje se výhradně po celých denních nabídkách. Zůstávají všechny hlavní varianty
+(i tři menu), polévka, doplňky, nápoje i další druhy jídel dodané poskytovatelem.
+Počet karet se řídí skutečnými rozměry a měřeným obsahem. Kiosek stránkuje ručně,
+NSP automaticky bez tlačítek; běžná stránka má přirozený tok. Obnovení stejných dat
+nezmění otevřenou stránku. Změna rozměrů zachovává aktuální den.
+
+Grafika a pravidla velikostí jsou ve sdílených komponentách `meal-board.css` a
+`meal-board.js` centrálního design systému. Hlavička používá jeho společné metriky.
+Ikony se neřadí do textu jídel. Alergeny doplňku jsou označené jako společné;
+jednotlivým částem doplňku se nepřiřazují odhadované alergeny.
 
 ## Ověření
 
@@ -64,3 +73,4 @@ Seznam automaticky načítaných jídelen je v `nightly-sources.json`, nyní Str
 11592. Jiné číslo zadané pouze v odkazu se do tohoto seznamu samo nezapíše.
 Při přidání další školy je nutné doplnit i tento seznam.
 Workflow lze spustit ručně tlačítkem Run workflow (vynutí stažení i mimo noční čas).
+
