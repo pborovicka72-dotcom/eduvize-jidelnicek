@@ -15,3 +15,18 @@ $('check').onclick=async()=>{const button=$('check');try{validate();button.disab
 $('saveLocal').onclick=()=>{try{validate();localStorage.setItem(key,JSON.stringify(values()));$('status').textContent='Uloženo v tomto prohlížeči.'}catch(error){$('status').textContent=error.message}};
 $('open').onclick=()=>{try{validate();location.assign(EduvizeSegmentSelection.url())}catch(error){$('status').textContent=error.message}};
 $('copy').onclick=async()=>{try{validate();await navigator.clipboard.writeText(EduvizeSegmentSelection.url());$('status').textContent='Odkaz zkopírován.'}catch(error){$('status').textContent=error.message}};
+
+
+// Persist the same public menu settings in the shared school/screen profile.
+window.EduvizeProfileAdapter={
+ app:'menu',
+ validate,
+ read:()=>({schemaVersion:1,values:values(),segment:window.EduvizeProfiles.segment()}),
+ apply:async config=>{
+  if(config?.schemaVersion!==1||!config.values||!/^\d{4,6}$/.test(String(config.values.canteen||'')))throw Error('Neplatné nastavení jídelníčku.');
+  window.EduvizeProfiles.fields(ids).apply(config.values);
+  syncPresentation();window.EduvizeProfiles.applySegment(config.segment);
+  localStorage.setItem(key,JSON.stringify(values()));preview.refresh();
+ }
+};
+window.dispatchEvent(new Event('eduvize-profile-adapter-ready'));
