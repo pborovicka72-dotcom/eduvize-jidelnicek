@@ -3,7 +3,7 @@ body{margin:0;background:var(--ev-bg,#edf3f8);color:var(--ev-text,#17304f);font-
 #menu-app{height:100dvh;padding:var(--menu-gap,16px);display:flex;flex-direction:column;gap:var(--menu-gap,16px)}
 #menu-app>.edu-output-header{display:flex;align-items:center;flex:none;background:var(--ev-primary,#087f91);color:var(--ev-primary-text,#fff);border-radius:var(--ev-card-radius,20px)}
 .menu-identity{min-width:0;flex:1}
-#menu-period{font-size:var(--edu-header-meta);line-height:1.3;text-align:right;max-width:33%;margin:0}
+#menu-clock{font-size:var(--edu-header-meta);line-height:1.3;text-align:right;max-width:33%;margin:0}
 #message{margin:0;font-size:18px}#message[hidden]{display:none}
 #menu-content{flex:1;min-height:0;min-width:0;position:relative}
 #menu-content .edu-paged-content{height:100%}
@@ -15,8 +15,8 @@ body{margin:0;background:var(--ev-bg,#edf3f8);color:var(--ev-text,#17304f);font-
 .edu-build-marker{position:fixed;right:4px;bottom:2px;pointer-events:none;font:10px system-ui;opacity:.65}
 html[data-output-mode=web] #menu-app{height:auto;max-width:1600px;margin:auto;padding:24px;gap:24px}
 html[data-output-mode=web] #menu-content{display:grid;gap:24px}
-@media(max-width:650px){html[data-output-mode=web] #menu-app{padding:12px;gap:12px}#menu-period{display:none}}
+@media(max-width:650px){html[data-output-mode=web] #menu-app{padding:12px;gap:12px}#menu-clock{display:none}}
 
-#menu-period{font-size:var(--edu-header-meta);line-height:1.4;white-space:nowrap;max-width:45%;align-self:center;font-weight:650}#menu-app>.edu-output-header{padding:var(--edu-header-padding,24px);gap:var(--menu-gap,16px)}
+#menu-clock{font-size:var(--edu-header-meta);line-height:1.4;white-space:nowrap;max-width:45%;align-self:center;font-weight:650}#menu-app>.edu-output-header{padding:var(--edu-header-padding,24px);gap:var(--menu-gap,16px)}
 
-.menu-clock{text-align:right;flex:none;max-width:45%;font-variant-numeric:tabular-nums}.menu-clock>strong{display:block;font-size:var(--edu-header-title);line-height:1.1}.menu-clock #menu-period{max-width:none;margin-top:.2em;font-size:var(--edu-header-meta)}
+.menu-clock{text-align:right;flex:none;max-width:45%;font-variant-numeric:tabular-nums}.menu-clock>strong{display:block;font-size:var(--edu-header-title);line-height:1.1}.menu-clock #menu-clock{max-width:none;margin-top:.2em;font-size:var(--edu-header-meta)}
