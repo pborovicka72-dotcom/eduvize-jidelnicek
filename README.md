@@ -55,8 +55,8 @@ používají tuto veřejnou adresu. Staré lokální odkazy na portu 8790 kiosek
 rozpozná a převede na veřejný výstup se zachováním parametrů jídelny.
 Lokální běh zůstává dostupný pro vývoj.
 
-Nastavení lze uložit v prohlížeči a přenášet odkazem. Ukládání nastavení na
-OneDrive zatím není připojeno.
+Nastavení lze uložit v prohlížeči, přenášet odkazem i uložit na OneDrive do
+společného profilu Eduvize. Profil uchovává jídelnu, volby zobrazení a segment.
 
 ## Noční obnova
 
