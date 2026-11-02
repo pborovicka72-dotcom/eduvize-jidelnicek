@@ -80,4 +80,19 @@ async function load(){
 let resizeFrame;addEventListener('resize',()=>{cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(render);});
 document.fonts?.ready.then(()=>{if(data)render();});geometry();load();setInterval(load,300000);
 
-(function(){function clock(){const node=document.getElementById('menu-clock');const now=new Date();const date=document.getElementById('menu-period');if(date)date.textContent=new Intl.DateTimeFormat('cs-CZ',{day:'numeric',month:'long',timeZone:'Europe/Prague'}).format(now);if(node){node.hidden=p.get('showTime')!=='1';node.style.display=node.hidden?'none':'';}if(node&&!node.hidden)node.textContent=new Intl.DateTimeFormat('cs-CZ',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Prague'}).format(now);}clock();setInterval(clock,1000);})();
+// Prefer the complete date; use its numeric form when the shared title scale cannot fit.
+const dateMeasure=document.createElement('canvas').getContext('2d');
+function updateHeaderDate(now=new Date()){
+ const node=$('menu-period');if(!node)return;
+ const options={day:'numeric',month:'long',timeZone:'Europe/Prague'};
+ const full=new Intl.DateTimeFormat('cs-CZ',options).format(now);
+ if(!node.textContent)node.textContent=full;
+ const style=getComputedStyle(node),size=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--edu-header-title'))||parseFloat(style.fontSize);
+ const width=node.parentElement.clientWidth;
+ if(dateMeasure)dateMeasure.font=style.fontWeight+' '+size+'px '+style.fontFamily;
+ const compact=width>0&&dateMeasure&&dateMeasure.measureText(full).width>width-2;
+ const text=compact?new Intl.DateTimeFormat('cs-CZ',{...options,month:'numeric'}).format(now):full;
+ if(node.textContent!==text)node.textContent=text;
+ node.title=full;node.setAttribute('aria-label',full);
+}
+(function(){function clock(){const now=new Date();updateHeaderDate(now);const node=$('menu-clock');if(node){node.hidden=p.get('showTime')!=='1';node.style.display=node.hidden?'none':'';if(!node.hidden)node.textContent=new Intl.DateTimeFormat('cs-CZ',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Prague'}).format(now);}}clock();setInterval(clock,1000);addEventListener('resize',()=>requestAnimationFrame(()=>{updateHeaderDate();EduvizeOutputHeader.update();}));document.fonts?.ready.then(()=>{updateHeaderDate();EduvizeOutputHeader.update();});})();
