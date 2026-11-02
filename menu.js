@@ -37,7 +37,7 @@ function geometry(){
 function render(){
  if(!data)return;clearInterval(timer);const profile=geometry(),selected=allDays(),host=$('menu-content');
  $('menu-title').textContent='Jídelníček';$('menu-subtitle').textContent=p.get('name')||'Jídelna '+canteen;
- $('menu-period').textContent=selected.length?new Intl.DateTimeFormat('cs-CZ',{day:'numeric',month:'long'}).formatRange(new Date(selected[0].date+'T12:00:00'),new Date(selected.at(-1).date+'T12:00:00')):'';
+
  if(!selected.length){host.replaceChildren(make('p','Jídelna zatím nezveřejnila jídelníček pro následující dny.','menu-empty'));return;}
  const options={paths:EduvizeMeals.paths,allergens:showAllergens,horizontal:profile.horizontal};
  if(mode==='web'){
@@ -82,4 +82,4 @@ async function load(){
 let resizeFrame;addEventListener('resize',()=>{cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(render);});
 document.fonts?.ready.then(()=>{if(data)render();});geometry();load();setInterval(load,300000);
 
-(function(){function clock(){const node=document.getElementById('menu-clock');if(node)node.textContent=new Intl.DateTimeFormat('cs-CZ',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Prague'}).format(new Date());}clock();setInterval(clock,1000);})();
+(function(){function clock(){const node=document.getElementById('menu-clock');const now=new Date();const date=document.getElementById('menu-period');if(date)date.textContent=new Intl.DateTimeFormat('cs-CZ',{day:'numeric',month:'long',timeZone:'Europe/Prague'}).format(now);if(node)node.textContent=new Intl.DateTimeFormat('cs-CZ',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Prague'}).format(now);}clock();setInterval(clock,1000);})();
