@@ -64,10 +64,8 @@ function render(){
  const nav=host.querySelector('.edu-pagination');
  const target=spreads.findIndex(page=>page.days.some(day=>day.date===savedAnchor));
  if(target>=0){const controls=nav.querySelectorAll('button');while(currentPage>target)controls[0].click();while(currentPage<target)controls[1].click();}
- if(mode==='nsp'){
-  nav.classList.add('menu-auto-pagination');nav.querySelectorAll('button').forEach(b=>b.hidden=true);
-  if(spreads.length>1)timer=setInterval(()=>{const buttons=nav.querySelectorAll('button');if(buttons[1].disabled){while(!buttons[0].disabled)buttons[0].click();}else buttons[1].click();},12000);
- }
+ // Interactivity and timed paging are owned by the shared output contract.
+
 }
 async function load(){
  if(pending)return;pending=true;
