@@ -52,7 +52,7 @@ class Handler(SimpleHTTPRequestHandler):
     def do_GET(self):
         u=urlparse(self.path);q=parse_qs(u.query)
         if u.path=='/api/providers':return self.send_json([{'id':p.id,'name':p.name} for p in PROVIDERS.values()])
-        if u.path=='/health':return self.send_json({'status':'ok','version':'2026.11.01.5'})
+        if u.path=='/health':return self.send_json({'status':'ok','version':'2026.11.02.1'})
         if u.path=='/api/menu':
             try:
                 data=load_menu(q.get('provider',['strava'])[0],q.get('canteen',[''])[0]);today=datetime.now(ZoneInfo('Europe/Prague')).date().isoformat()
