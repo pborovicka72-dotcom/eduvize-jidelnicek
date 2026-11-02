@@ -81,3 +81,5 @@ async function load(){
 }
 let resizeFrame;addEventListener('resize',()=>{cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(render);});
 document.fonts?.ready.then(()=>{if(data)render();});geometry();load();setInterval(load,300000);
+
+(function(){function clock(){const node=document.getElementById('menu-clock');if(node)node.textContent=new Intl.DateTimeFormat('cs-CZ',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Prague'}).format(new Date());}clock();setInterval(clock,1000);})();

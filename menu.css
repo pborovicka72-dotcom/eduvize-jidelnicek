@@ -16,3 +16,7 @@ body{margin:0;background:var(--ev-bg,#edf3f8);color:var(--ev-text,#17304f);font-
 html[data-output-mode=web] #menu-app{height:auto;max-width:1600px;margin:auto;padding:24px;gap:24px}
 html[data-output-mode=web] #menu-content{display:grid;gap:24px}
 @media(max-width:650px){html[data-output-mode=web] #menu-app{padding:12px;gap:12px}#menu-period{display:none}}
+
+#menu-period{font-size:var(--edu-header-meta);line-height:1.4;white-space:nowrap;max-width:45%;align-self:center;font-weight:650}#menu-app>.edu-output-header{padding:var(--edu-header-padding,24px);gap:var(--menu-gap,16px)}
+
+.menu-clock{text-align:right;flex:none;max-width:45%;font-variant-numeric:tabular-nums}.menu-clock>strong{display:block;font-size:var(--edu-header-title);line-height:1.1}.menu-clock #menu-period{max-width:none;margin-top:.2em;font-size:var(--edu-header-meta)}
