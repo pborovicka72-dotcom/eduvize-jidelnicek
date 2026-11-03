@@ -7,31 +7,6 @@
       "source": "https://www.strava.cz/strava5/Jidelnicky/XML?zarizeni=11592",
       "days": [
         {
-          "date": "2026-11-02",
-          "meals": [
-            {
-              "name": "Polévka selská bramborová",
-              "group": "Polévka",
-              "allergens": "01 -Obiloviny obsahující lepek,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Rizoto s masem a sýrem",
-              "group": "Oběd 1",
-              "allergens": "01 -Obiloviny obsahující lepek,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Žampióny plněné, Brambor",
-              "group": "Oběd 2",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Čaj ovocný, Mléko, Ochucené mléko,Voda, Ovoce, Zelenina",
-              "group": "Doplněk",
-              "allergens": "07 -Mléko"
-            }
-          ]
-        },
-        {
           "date": "2026-11-03",
           "meals": [
             {
@@ -482,7 +457,7 @@
           ]
         }
       ],
-      "updated": 1793582308.748022
+      "updated": 1793668552.29674
     }
   }
 }
