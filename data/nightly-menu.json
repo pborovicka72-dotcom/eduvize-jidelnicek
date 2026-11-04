@@ -7,31 +7,6 @@
       "source": "https://www.strava.cz/strava5/Jidelnicky/XML?zarizeni=11592",
       "days": [
         {
-          "date": "2026-11-03",
-          "meals": [
-            {
-              "name": "Hovězí polévka s játrovou zavářkou",
-              "group": "Polévka",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Hovězí svíčková na smetaně, Houskové knedlíky, Kompot brusinkový",
-              "group": "Oběd 1",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer,10 -Hořčice"
-            },
-            {
-              "name": "Špagety s česnekem a sýrem",
-              "group": "Oběd 2",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Čaj ovocný, Mléko, Ovoce, Voda, Zeleninová obloha",
-              "group": "Doplněk",
-              "allergens": "07 -Mléko"
-            }
-          ]
-        },
-        {
           "date": "2026-11-04",
           "meals": [
             {
@@ -457,7 +432,7 @@
           ]
         }
       ],
-      "updated": 1793668552.29674
+      "updated": 1793755065.138167
     }
   }
 }
