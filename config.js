@@ -11,7 +11,37 @@ function values(){return Object.fromEntries(ids.map(id=>[id,['allergens','showTi
 function output(){const u=new URL('index.html',location.href);for(const [k,v]of Object.entries(values()))u.searchParams.set(k,typeof v==='boolean'?(v?'1':'0'):v);return EduvizeOutputModes.url(u,$('viewMode').value).href;}
 function validate(){if(!/^\d{4,6}$/.test($('canteen').value.trim()))throw Error('Číslo jídelny musí mít 4 až 6 číslic.');}
 const preview=EduvizeEditorialAdmin.mount({mode:$('viewMode'),url:output,key:'eduvize-menu-segment',host:document.querySelector('.edu-output-section')});
-$('check').onclick=async()=>{const button=$('check');try{validate();button.disabled=true;$('status').textContent='Načítám jídelníček…';const response=await fetch('/api/menu?'+new URLSearchParams({provider:$('provider').value,canteen:$('canteen').value.trim()}));const data=await response.json();if(!response.ok)throw Error(data.detail||'Jídelníček se nepodařilo načíst.');$('status').textContent=data.days.length?'Načteno '+data.days.length+' dnů. Nejbližší jídelníček: '+new Date(data.days[0].date+'T12:00:00').toLocaleDateString('cs-CZ')+'.'+(data.stale?' '+data.warning:''):'Jídelna zatím nezveřejnila jídelníček pro následující dny.';preview.refresh();}catch(error){$('status').textContent=error.message}finally{button.disabled=false}};
+let menuRequest=0,menuTimer,menuController;
+async function loadMenu(){
+ const request=++menuRequest;
+ clearTimeout(menuTimer);menuController?.abort();
+ $('retry-menu').hidden=true;
+ try{
+  validate();
+  menuController=new AbortController();
+  $('status').textContent='Načítám jídelníček…';
+  const response=await fetch('/api/menu?'+new URLSearchParams({provider:$('provider').value,canteen:$('canteen').value.trim()}),{signal:menuController.signal});
+  const data=await response.json();
+  if(request!==menuRequest)return;
+  if(!response.ok)throw Error(data.detail||'Jídelníček se nepodařilo načíst.');
+  $('status').textContent=data.days.length?'Načteno '+data.days.length+' dnů. Nejbližší jídelníček: '+new Date(data.days[0].date+'T12:00:00').toLocaleDateString('cs-CZ')+'.'+(data.stale?' '+data.warning:''):'Jídelna zatím nezveřejnila jídelníček pro následující dny.';
+  preview.refresh();
+ }catch(error){
+  if(request!==menuRequest||error.name==='AbortError')return;
+  $('status').textContent=error.message;
+  $('retry-menu').hidden=!/^\\d{4,6}$/.test($('canteen').value.trim());
+ }
+}
+function scheduleMenu(){
+ ++menuRequest;menuController?.abort();clearTimeout(menuTimer);
+ $('retry-menu').hidden=true;
+ $('status').textContent='';
+ menuTimer=setTimeout(loadMenu,500);
+}
+$('retry-menu').onclick=loadMenu;
+$('canteen').addEventListener('input',scheduleMenu);
+$('provider').addEventListener('change',scheduleMenu);
+loadMenu();
 $('saveLocal').onclick=()=>{try{validate();localStorage.setItem(key,JSON.stringify(values()));$('output-status').textContent='Uloženo v tomto prohlížeči.'}catch(error){$('output-status').textContent=error.message}};
 $('open').onclick=()=>{try{validate();window.EduvizeAdminNavigation.openOutput(EduvizeSegmentSelection.url())}catch(error){$('output-status').textContent=error.message}};
 $('copy').onclick=async()=>{try{validate();await navigator.clipboard.writeText(EduvizeSegmentSelection.url());$('output-status').textContent='Odkaz zkopírován.'}catch(error){$('output-status').textContent=error.message}};
@@ -26,7 +56,7 @@ window.EduvizeProfileAdapter={
   if(config?.schemaVersion!==1||!config.values||!/^\d{4,6}$/.test(String(config.values.canteen||'')))throw Error('Neplatné nastavení jídelníčku.');
   window.EduvizeProfiles.fields(ids).apply({showTime:false,...config.values});
   syncPresentation();window.EduvizeProfiles.applySegment(config.segment);
-  localStorage.setItem(key,JSON.stringify(values()));preview.refresh();
+  localStorage.setItem(key,JSON.stringify(values()));preview.refresh();loadMenu();
  }
 };
 window.dispatchEvent(new Event('eduvize-profile-adapter-ready'));
