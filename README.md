@@ -74,3 +74,22 @@ Seznam automaticky načítaných jídelen je v `nightly-sources.json`, nyní Str
 Při přidání další školy je nutné doplnit i tento seznam.
 Workflow lze spustit ručně tlačítkem Run workflow (vynutí stažení i mimo noční čas).
 
+
+## Stálý cloudový výstup
+
+Po uložení do Eduvize tlačítka Kopírovat odkaz a Otevřít výstup používají
+`output.html?edu-menu=<profil>&edu-profile=<profil>&edu-link=1`. Každý profil má
+v této verzi jedno uložené nastavení Jídelníčku; různé sestavy vyžadují různé
+profily. Odkaz zůstává stejný při úpravě jídelny, vzhledu, obsahu i segmentu.
+Otevřený výstup kontroluje publikované nastavení každých 15 sekund bez přihlášení.
+Při nedostupnosti nastavení ponechá poslední zobrazený výstup. Nové otevření
+potřebuje dostupné veřejné API. Aktualizace samotné nabídky dál běží po 5 minutách.
+
+Uložení nastavuje `publicOutput: true`; veřejné API vrací pouze povolená pole
+jídelníčku. Nezveřejňuje celý profil, ostatní aplikace ani školní identitu.
+Soukromá starší konfigurace se bez nového uložení nezveřejňuje. Neuložené změny
+je nutné před kopírováním stálého odkazu uložit. Staré `index.html?...` odkazy
+včetně `days=1` zůstávají parametrické a zachovávají svůj původní význam.
+
+Vyžaduje společnou administraci s `/api/public/menu-outputs/{profile_id}`.
+Vydávat společně se změnou eduvize-admin a podporou nové domény v eduvize-styly.
