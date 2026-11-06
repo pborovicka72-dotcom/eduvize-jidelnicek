@@ -44,6 +44,7 @@ $('provider').addEventListener('change',scheduleMenu);
 loadMenu();
 $('saveLocal').onclick=()=>{try{validate();localStorage.setItem(key,JSON.stringify(values()));$('output-status').textContent='Uloženo v tomto prohlížeči.'}catch(error){$('output-status').textContent=error.message}};
 async function publishedOutput(){
+ if(window.EduvizeMenuStableLinksEnabled!==true)throw Error('Generování nových odkazů čeká na centrální sjednocení Eduvize. Pro kontrolu nastavení použijte náhled.');
  const auth=window.EduvizeAdminAuth;await auth?.ready;
  if(!auth?.status().connected)throw Error('Pro stálý odkaz se přihlaste a uložte jídelníček do Eduvize. Staré odkazy zůstávají funkční.');
  const id=auth.status().profileId;

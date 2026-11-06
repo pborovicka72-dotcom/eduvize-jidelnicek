@@ -93,3 +93,8 @@ včetně `days=1` zůstávají parametrické a zachovávají svůj původní vý
 
 Vyžaduje společnou administraci s `/api/public/menu-outputs/{profile_id}`.
 Vydávat společně se změnou eduvize-admin a podporou nové domény v eduvize-styly.
+
+Generování nových adres je do dokončení centrálního workflow vypnuté.
+Centrální integrace jej může následně zapnout přes `EduvizeMenuStableLinksEnabled`.
+Testovací ověření veřejného čtení používá vyhrazený testovací profil; nejde
+o vydávání nových školních odkazů.
