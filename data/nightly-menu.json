@@ -7,31 +7,6 @@
       "source": "https://www.strava.cz/strava5/Jidelnicky/XML?zarizeni=11592",
       "days": [
         {
-          "date": "2026-11-05",
-          "meals": [
-            {
-              "name": "Polévka slepičí s celestýnskými nudlemi",
-              "group": "Polévka",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Kuřecí špíz na plechu, Americké brambory, Dětská tatarská omáčka",
-              "group": "Oběd 1",
-              "allergens": "03 -Vejce,07 -Mléko,09 -Celer,10 -Hořčice"
-            },
-            {
-              "name": "Těstoviny se zeleninou, zapečené, Okurka sterilovaná",
-              "group": "Oběd 2",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer,10 -Hořčice"
-            },
-            {
-              "name": "Čaj ovocný, Mléko, Ovoce, Voda, Zeleninová obloha",
-              "group": "Doplněk",
-              "allergens": "07 -Mléko"
-            }
-          ]
-        },
-        {
           "date": "2026-11-06",
           "meals": [
             {
@@ -407,7 +382,7 @@
           ]
         }
       ],
-      "updated": 1793841567.919413
+      "updated": 1793928177.041278
     }
   }
 }
