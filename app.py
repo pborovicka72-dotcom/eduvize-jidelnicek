@@ -59,7 +59,7 @@ class Handler(SimpleHTTPRequestHandler):
                 data={**data,'today':today,'days':[d for d in data['days'] if d['date']>=today]}
                 return self.send_json(data)
             except MenuError as error:return self.send_json({'detail':str(error)},422)
-        allowed={'/':'index.html','/index.html':'index.html','/config':'config.html','/config.html':'config.html','/meal-model.js':'meal-model.js','/menu.js':'menu.js','/menu.css':'menu.css','/config.js':'config.js','/favicon.svg':'favicon.svg'}
+        allowed={'/':'index.html','/index.html':'index.html','/config':'config.html','/config.html':'config.html','/meal-model.js':'meal-model.js','/menu.js':'menu.js','/menu.css':'menu.css','/config.js':'config.js','/output.html':'output.html','/public-output.js':'public-output.js','/favicon.svg':'favicon.svg'}
         if u.path not in allowed:return self.send_error(404)
         self.path='/'+allowed[u.path]
         super().do_GET()

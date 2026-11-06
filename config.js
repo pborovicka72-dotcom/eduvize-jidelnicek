@@ -29,7 +29,7 @@ async function loadMenu(){
  }catch(error){
   if(request!==menuRequest||error.name==='AbortError')return;
   $('status').textContent=error.message;
-  $('retry-menu').hidden=!/^\\d{4,6}$/.test($('canteen').value.trim());
+  $('retry-menu').hidden=!/^\d{4,6}$/.test($('canteen').value.trim());
  }
 }
 function scheduleMenu(){
@@ -43,15 +43,27 @@ $('canteen').addEventListener('input',scheduleMenu);
 $('provider').addEventListener('change',scheduleMenu);
 loadMenu();
 $('saveLocal').onclick=()=>{try{validate();localStorage.setItem(key,JSON.stringify(values()));$('output-status').textContent='Uloženo v tomto prohlížeči.'}catch(error){$('output-status').textContent=error.message}};
-$('open').onclick=()=>{try{validate();window.EduvizeAdminNavigation.openOutput(EduvizeSegmentSelection.url())}catch(error){$('output-status').textContent=error.message}};
-$('copy').onclick=async()=>{try{validate();await navigator.clipboard.writeText(EduvizeSegmentSelection.url());$('output-status').textContent='Odkaz zkopírován.'}catch(error){$('output-status').textContent=error.message}};
-
+async function publishedOutput(){
+ if(window.EduvizeMenuStableLinksEnabled!==true)throw Error('Generování nových odkazů čeká na centrální sjednocení Eduvize. Pro kontrolu nastavení použijte náhled.');
+ const auth=window.EduvizeAdminAuth;await auth?.ready;
+ if(!auth?.status().connected)throw Error('Pro stálý odkaz se přihlaste a uložte jídelníček do Eduvize. Staré odkazy zůstávají funkční.');
+ const id=auth.status().profileId;
+ if(!/^[a-f0-9]{32}$/.test(id||''))throw Error('Vyberte profil a uložte jídelníček do Eduvize.');
+ const response=await auth.fetch(auth.DOCS+'/api/admin/configuration-profiles/'+id,{},auth.getToken('configurations')?'configurations':'documents');
+ const profile=await response.json();if(!response.ok)throw Error(profile.detail||'Uložení nelze ověřit.');
+ const stored=profile.apps?.menu?.config,current=window.EduvizeProfileAdapter.read();
+ const equal=(a,b)=>JSON.stringify(a)===JSON.stringify(b);
+ if(!stored?.publicOutput||!ids.every(key=>equal(stored.values?.[key],current.values[key]))||!['orientation','style','block'].every(key=>equal(stored.segment?.[key],current.segment?.[key]))||stored.outputInteraction!==window.EduvizeOutputModes.selection()||stored.outputKioskLayout!==window.EduvizeOutputModes.layoutSelection?.())throw Error('Nejprve uložte změny tlačítkem Uložit do Eduvize.');
+ const url=new URL('output.html',location.href);url.searchParams.set('edu-menu',id);url.searchParams.set('edu-profile',id);url.searchParams.set('edu-link','1');return url.href;
+}
+$('open').onclick=async()=>{try{validate();window.EduvizeAdminNavigation.openOutput(await publishedOutput())}catch(error){$('output-status').textContent=error.message}};
+$('copy').onclick=async()=>{try{validate();await navigator.clipboard.writeText(await publishedOutput());$('output-status').textContent='Stálý odkaz zkopírován. Další uložení aktualizuje tentýž výstup.'}catch(error){$('output-status').textContent=error.message}};
 
 // Persist the same public menu settings in the shared school/screen profile.
 window.EduvizeProfileAdapter={
  app:'menu',
  validate,
- read:()=>({schemaVersion:1,values:values(),segment:window.EduvizeProfiles.segment()}),
+ read:()=>({schemaVersion:1,publicOutput:true,values:values(),segment:window.EduvizeProfiles.segment()}),
  apply:async config=>{
   if(config?.schemaVersion!==1||!config.values||!/^\d{4,6}$/.test(String(config.values.canteen||'')))throw Error('Neplatné nastavení jídelníčku.');
   window.EduvizeProfiles.fields(ids).apply({showTime:false,...config.values});
