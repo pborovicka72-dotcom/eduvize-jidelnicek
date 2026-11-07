@@ -7,31 +7,6 @@
       "source": "https://www.strava.cz/strava5/Jidelnicky/XML?zarizeni=11592",
       "days": [
         {
-          "date": "2026-11-06",
-          "meals": [
-            {
-              "name": "Polévka květáková",
-              "group": "Polévka",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Dukátové buchtičky s krémem",
-              "group": "Oběd 1",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko"
-            },
-            {
-              "name": "Pečené papriky plněné sýrem, Brambor",
-              "group": "Oběd 2",
-              "allergens": "03 -Vejce,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Čaj ovocný, Mléko, Ochucené mléko, Voda, Mléčný pátek",
-              "group": "Doplněk",
-              "allergens": "07 -Mléko"
-            }
-          ]
-        },
-        {
           "date": "2026-11-09",
           "meals": [
             {
@@ -382,7 +357,7 @@
           ]
         }
       ],
-      "updated": 1793928177.041278
+      "updated": 1794013951.70385
     }
   }
 }
