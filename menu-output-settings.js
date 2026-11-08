@@ -32,12 +32,14 @@
   const g=p.geometry;
   if(p.mode==='web'&&g!==null||p.mode!=='kiosk'&&p.kioskLayout!=null)throw Error('Neplatné uložené zobrazení.');
   if(p.mode!=='web'&&(!g||g.registryVersion!==1||g.registryId!==(p.mode==='nsp'?'nsp-4k':'kiosk-viewport')))throw Error('Neplatná uložená geometrie.');
+  if(p.mode==='kiosk'&&(g.orientation!==(g.height>g.width?'portrait':'landscape')||g.layoutId!=null||g.segmentId!=null))throw Error('Neplatná uložená orientace kiosku.');
   if(p.mode==='nsp'&&(!Number.isInteger(g.layoutId)||!Number.isInteger(g.segmentId)||g.width!=null||g.height!=null))throw Error('Neplatný uložený segment.');
   return presentation({...value,segment:p.mode==='nsp'?{orientation:g?.orientation,style:g?.layoutId,block:g?.segmentId}:value.segment},p.mode,p.interaction,p.kioskLayout,{width:g?.width,height:g?.height});
  }
  function capture(config){
-  const frame=document.querySelector('#ev-preview iframe');
-  return presentation(config,document.getElementById('viewMode').value,root.EduvizeOutputModes.selection(),root.EduvizeOutputModes.layoutSelection?.(),{width:frame?.clientWidth,height:frame?.clientHeight});
+  const frame=document.querySelector('#ev-preview iframe'),actual=root.EduvizeSegmentSelection?.kioskGeometry?.();
+  const viewport=actual||{width:Number(frame?.getAttribute('data-preview-width')),height:Number(frame?.getAttribute('data-preview-height'))};
+  return presentation(config,document.getElementById('viewMode').value,root.EduvizeOutputModes.selection(),root.EduvizeOutputModes.layoutSelection?.(),viewport);
  }
  function save(config,p){
   // Keep the native configuration shape; ordinary Save adds the full Presentation.

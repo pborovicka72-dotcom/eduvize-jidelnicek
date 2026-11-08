@@ -27,12 +27,13 @@ module.exports=async function(savedReaderCode){
  afterRead=()=>form.values.canteen='12345';await assert.rejects(captured.draft(),/mezitím/);form.values.canteen='11592';afterRead=null;count++;
  const g={registryId:'nsp-4k',registryVersion:99,orientation:'landscape',layoutId:1,segmentId:1};assert.throws(()=>settings.storedPresentation({values:form.values,presentation:{mode:'nsp',geometry:g,interaction:'display'}}));count++;
  // Execute actual native profile adapter: Save carries Presentation and apply accepts old records.
- let policy='display',applied;
+ let policy='display',applied,kioskGeometry=null,kioskSetterCalls=0;
  const fields=Object.fromEntries(['provider','canteen','name','days','presentation','allergens','showTime','viewMode','days-field','retry-menu','status','saveLocal','output-status'].map(id=>[id,{value:form.values[id]??'',checked:form.values[id]===true,addEventListener(){}}]));
  const ctx2={URL,URLSearchParams,AbortController,Event,location:{search:'',href:'https://test.skola.eduvize.cz/jidelnicek/config.html'},
   document:{getElementById:id=>fields[id],querySelector:()=>null},localStorage:{getItem:()=>null,setItem(){}},addEventListener(){},dispatchEvent(){},clearTimeout(){},setTimeout(){},
-  EduvizeOutputModes:{selection:()=>policy,layoutSelection:()=> 'menu',setInteraction:v=>policy=v},
+  EduvizeOutputModes:{selection:()=>policy,layoutSelection:()=> 'menu',setInteraction:v=>policy=v,setKioskLayout(){}},
   EduvizeEditorialAdmin:{mount:()=>({refresh(){}})},
+  EduvizeSegmentSelection:{setKioskGeometry:g=>{kioskSetterCalls++;kioskGeometry={...g};return true;},kioskGeometry:()=>fields.viewMode.value==='kiosk'?kioskGeometry:null},
   EduvizeProfiles:{segment:()=>form.segment,applySegment:v=>applied=v,fields:()=>({apply:values=>{for(const [k,v] of Object.entries(values))if(fields[k]){fields[k].value=String(v);fields[k].checked=v===true;}}})},
   fetch:async()=>({ok:true,json:async()=>({days:[]})})};ctx2.window=ctx2;
  vm.runInNewContext(source('menu-output-settings.js'),ctx2);vm.runInNewContext(source('config.js'),ctx2);await new Promise(setImmediate);
@@ -40,5 +41,9 @@ module.exports=async function(savedReaderCode){
  await ctx2.EduvizeProfileAdapter.apply(structuredClone(form));assert.equal(fields.canteen.value,'11592');assert.equal(applied.style,1);count++;
  const next=ctx2.EduvizeMenuOutputSettings.save({...form,values:{...form.values,name:'Nová jídelna'}},{mode:'web',geometry:null,interaction:'interactive'});
  await ctx2.EduvizeProfileAdapter.apply(next);assert.equal(fields.name.value,'Nová jídelna');assert.equal(policy,'interactive');count++;
+ const portrait={mode:'kiosk',geometry:{registryId:'kiosk-viewport',registryVersion:1,orientation:'portrait',width:1080,height:1920},interaction:'interactive',kioskLayout:'menu'};
+ const portraitConfig=ctx2.EduvizeMenuOutputSettings.save({...form,values:{...form.values,viewMode:'kiosk'}},portrait);
+ await ctx2.EduvizeProfileAdapter.apply(portraitConfig);const restored=ctx2.EduvizeProfileAdapter.read();assert.equal(kioskSetterCalls,1);assert.equal(restored.presentation.geometry.width,1080);assert.equal(restored.presentation.geometry.height,1920);assert.equal(restored.presentation.geometry.orientation,'portrait');count++;
+ const bad=structuredClone(portraitConfig);bad.presentation.geometry.orientation='landscape';await assert.rejects(ctx2.EduvizeProfileAdapter.apply(bad));assert.equal(kioskSetterCalls,1);count++;
  console.log(count+' menu V2 bridge checks PASS');return count;
 };

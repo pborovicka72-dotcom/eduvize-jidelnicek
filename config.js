@@ -51,10 +51,15 @@ window.EduvizeProfileAdapter={
  apply:async config=>{
   const envelope=config;config=window.EduvizeMenuOutputSettings.native(config);
   if(config?.schemaVersion!==1||!config.values||!/^\d{4,6}$/.test(String(config.values.canteen||'')))throw Error('Neplatné nastavení jídelníčku.');
+  const savedPresentation=config.presentation||envelope.presentation?window.EduvizeMenuOutputSettings.storedPresentation(envelope):null;
+  if(savedPresentation?.mode==='kiosk'){
+   const {width,height,orientation}=savedPresentation.geometry;
+   if(window.EduvizeSegmentSelection?.setKioskGeometry?.({width,height,orientation})!==true)throw Error('Uložené rozměry kiosku nyní nelze obnovit. Aktualizujte společný náhled.');
+  }
   window.EduvizeProfiles.fields(ids).apply({showTime:false,...config.values});
   syncPresentation();window.EduvizeProfiles.applySegment(config.segment);
-  if(config.presentation||envelope.presentation){
-   const p=window.EduvizeMenuOutputSettings.storedPresentation(envelope);
+  if(savedPresentation){
+   const p=savedPresentation;
    $('viewMode').value=p.mode;
    window.EduvizeOutputModes.setInteraction?.(p.interaction,{notify:false});
    if(p.mode==='kiosk')window.EduvizeOutputModes.setKioskLayout?.(p.kioskLayout,{notify:false});

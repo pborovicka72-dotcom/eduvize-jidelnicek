@@ -68,6 +68,15 @@ Source UI integration:
   only detect edits and never become the generated payload. Ordinary Save stores
   the full Presentation in native config.presentation and preserves values/segment.
   Old records without Presentation remain readable; Save once before Generate.
+  Kiosk apply validates saved Presentation, then calls shared
+  EduvizeSegmentSelection.setKioskGeometry({width,height,orientation}) BEFORE
+  form/mode changes. False/missing setter fails closed without a DOM-click fallback.
+  Capture reads shared kioskGeometry() or actual data-preview-width/height attrs,
+  never a CSS-scaled client rectangle or a browser-preference fallback.
+  Deployment dependency: the editorial-admin.js wrapper used by this application
+  must expose setKioskGeometry/kioskGeometry too. Styles PR33 ccbfb792 adds the
+  shared picker setter and autoMount getter, but its editorial wrapper still needs
+  the owner-provided hook; do not claim kiosk restore from autoMount-only coverage.
   actions.refresh() runs GET-only on initial install and profile/auth/mode changes.
   Save settings never calls OutputRegistry. Old prototype handlers are detached;
   the legacy publishedOutput function and Copy/Open handlers are removed.
