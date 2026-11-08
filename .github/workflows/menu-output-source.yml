@@ -23,5 +23,5 @@ jobs:
           node -e "require('./tests/registry-output.test.cjs')().catch(e=>{console.error(e);process.exitCode=1})"
           node --test tests/meal-model.test.cjs tests/public-output.test.cjs
       # Full output API tests require the private shared administration package.
-      # Run tests/test_output*.py in the existing coordinated multi-repo test bundle,
+      # Run tests/shared-registry/test_output*.py in the existing coordinated multi-repo test bundle,
       # never add a cross-repo token or publish private administration source here.

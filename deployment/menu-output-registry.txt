@@ -66,7 +66,7 @@ Source UI integration:
 
 Source CI runs provider/snapshot regressions and published JS behavior.
 Coordinated bundle CI must also run:
-  PYTHONPATH=<private admin source>:<menu source> python -m unittest discover -s tests -p 'test_output*.py' -v
+  PYTHONPATH=<private admin source>:<menu source> python -m unittest discover -s tests/shared-registry -p 'test_output*.py' -v
 Requires the private admin package + its existing pydantic/FastAPI/psycopg test deps.
 Never vendor that private source into this repository or add a cross-repo secret.
 
