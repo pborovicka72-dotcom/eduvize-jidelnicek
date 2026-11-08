@@ -1,0 +1,27 @@
+name: Menu output source checks
+on:
+  pull_request:
+  push:
+    branches: [feat/menu-registry-output]
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Existing provider and snapshot behavior
+        run: |
+          python3 -m pip install -r requirements.txt
+          python3 -m unittest discover -s tests -p test_menu.py -v
+          python3 -m unittest discover -s tests -p test_nightly.py -v
+          python3 -m compileall -q eduvize_menu
+      - name: Published renderer and menu settings behavior
+        run: |
+          node -e "require('./tests/registry-output.test.cjs')().catch(e=>{console.error(e);process.exitCode=1})"
+          node --test tests/meal-model.test.cjs tests/public-output.test.cjs
+      # Full output API tests require the private shared administration package.
+      # Run tests/test_output*.py in the existing coordinated multi-repo test bundle,
+      # never add a cross-repo token or publish private administration source here.
