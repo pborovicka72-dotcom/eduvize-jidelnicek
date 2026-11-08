@@ -55,18 +55,30 @@ Do NOT allow profile query as substitute for an opaque output ID.
 Source UI integration:
   existing actions retain order; adds one Generate/Update action before Copy.
   menu-output-actions.js is only an app bridge to Accounts-owned output-actions.js.
-  Requires Accounts asset with createSlotResolver; no local fork of the controller.
-  Slot: web, NSP orientation/layout/segment, or actual kiosk iframe viewport/layout.
+  Requires FROZEN OutputActions V2 (SHA256 48bd6c1ec321c6eb37478ce6ae861999630bfa80d99477c5792cdb040c94c050),
+  V2 output-client.js with lookupOutputSlot, and shared load-saved-app.js.
+  Context is schoolId/profileId/appId/presentation only. No local slotId,
+  matcher, resolve, hash calculation or cloned shared controller.
+  Shared canonical slot owns web, NSP and actual kiosk viewport identity;
+  kioskLayout/interaction/content/theme are excluded from slot identity.
   Menu source/name/days/allergens/time/interaction/theme do not change slot identity.
   Generate checks saved profile content then shared create/save/publish flow.
-  Copy/Open are GET-only and use authoritative shared list/get slot discovery.
+  Copy/Open are GET-only and use client.lookupOutputSlot via the shared controller.
+  A fresh saved-reader load(context) supplies native config; unsaved form reads
+  only detect edits and never become the generated payload. Ordinary Save stores
+  the full Presentation in native config.presentation and preserves values/segment.
+  Old records without Presentation remain readable; Save once before Generate.
+  actions.refresh() runs GET-only on initial install and profile/auth/mode changes.
   Save settings never calls OutputRegistry. Old prototype handlers are detached;
-  the old EduvizeMenuStableLinksEnabled flag is never set true.
+  the legacy publishedOutput function and Copy/Open handlers are removed.
   Old output.html?edu-menu and legacy parameterized routes are retained unchanged.
 
 Source CI runs provider/snapshot regressions and published JS behavior.
 Coordinated bundle CI must also run:
   PYTHONPATH=<private admin source>:<menu source> python -m unittest discover -s tests/shared-registry -p 'test_output*.py' -v
+  node -e "const fs=require('fs');require('./tests/menu-output-v2.test.cjs')(fs.readFileSync(process.env.SHARED_SAVED_READER,'utf8')).catch(e=>{console.error(e);process.exitCode=1})"
+Set SHARED_SAVED_READER to the reviewed shared load-saved-app.js asset.
+The app bridge test reads that exact shared implementation; it does not vendor it.
 Requires the private admin package + its existing pydantic/FastAPI/psycopg test deps.
 Never vendor that private source into this repository or add a cross-repo secret.
 

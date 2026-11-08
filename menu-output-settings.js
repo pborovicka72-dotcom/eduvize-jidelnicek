@@ -1,4 +1,4 @@
-/* App-owned settings/slot adapter. All creation, retry and link actions are shared. */
+/* App-owned saved settings adapter. Slot identity and actions belong to shared V2. */
 (function(root){'use strict';
  function payload(config){
   const v=config?.values;if(!v||v.provider!=='strava'||!/^[0-9]{4,6}$/.test(v.canteen||'')||typeof v.name!=='string'||v.name.length>120||/[\x00-\x1f]/.test(v.name)||!['day','overview'].includes(v.presentation)||typeof v.allergens!=='boolean'||typeof v.showTime!=='boolean')throw Error('Neplatné nastavení jídelníčku.');
@@ -21,14 +21,30 @@
   }
   return {mode,geometry,interaction,...(mode==='kiosk'?{kioskLayout}:{} )};
  }
- function slot(p){
-  if(p.mode==='web')return 'menu:web';
-  const g=p.geometry;
-  if(p.mode==='nsp'&&g?.registryId==='nsp-4k')return ['menu','nsp',g.orientation,g.layoutId,g.segmentId].join(':');
-  if(p.mode==='kiosk'&&g?.registryId==='kiosk-viewport')return ['menu','kiosk',g.width,g.height,p.kioskLayout].join(':');
-  throw Error('Neplatný typ výstupu.');
+ function native(config){
+  const value=config?.data?.values?config.data:config;
+  if(!value?.values)throw Error('Nejprve uložte nastavení jídelníčku do Eduvize.');
+  return value;
  }
- root.EduvizeMenuOutputSettings=Object.freeze({payload,presentation,slot,
-  draft:(config,p)=>({schemaVersion:1,payloadVersion:1,payload:payload(config),presentation:p}),
-  matches:(record,context)=>record.appId==='menu'&&record.profileId===context.profileId&&slot(record.draft.presentation)===context.slotId});
+ function storedPresentation(config){
+  const value=native(config),p=value.presentation||config.presentation;
+  if(!p)throw Error('Nejprve uložte aktuální nastavení výstupu do Eduvize.');
+  const g=p.geometry;
+  if(p.mode==='web'&&g!==null||p.mode!=='kiosk'&&p.kioskLayout!=null)throw Error('Neplatné uložené zobrazení.');
+  if(p.mode!=='web'&&(!g||g.registryVersion!==1||g.registryId!==(p.mode==='nsp'?'nsp-4k':'kiosk-viewport')))throw Error('Neplatná uložená geometrie.');
+  if(p.mode==='nsp'&&(!Number.isInteger(g.layoutId)||!Number.isInteger(g.segmentId)||g.width!=null||g.height!=null))throw Error('Neplatný uložený segment.');
+  return presentation({...value,segment:p.mode==='nsp'?{orientation:g?.orientation,style:g?.layoutId,block:g?.segmentId}:value.segment},p.mode,p.interaction,p.kioskLayout,{width:g?.width,height:g?.height});
+ }
+ function capture(config){
+  const frame=document.querySelector('#ev-preview iframe');
+  return presentation(config,document.getElementById('viewMode').value,root.EduvizeOutputModes.selection(),root.EduvizeOutputModes.layoutSelection?.(),{width:frame?.clientWidth,height:frame?.clientHeight});
+ }
+ function save(config,p){
+  // Keep the native configuration shape; ordinary Save adds the full Presentation.
+  const value=native(config),result={...config,...value,presentation:p};
+  if(config.data?.values)result.data={...config.data,presentation:p};
+  return result;
+ }
+ root.EduvizeMenuOutputSettings=Object.freeze({payload,presentation,native,storedPresentation,capture,save,
+  draft:(config,p)=>({schemaVersion:1,payloadVersion:1,payload:payload(native(config)),presentation:p})});
 })(typeof window==='undefined'?globalThis:window);

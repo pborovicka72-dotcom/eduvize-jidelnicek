@@ -9,14 +9,12 @@ module.exports=async function(){
  const config={values:{provider:'strava',canteen:'11592',name:'Škola A',days:'3',presentation:'overview',allergens:false,showTime:true,token:'private'},segment:{orientation:'landscape',style:1,block:1}};
  const p=a.presentation(config,'web','display','menu');
  assert.equal(a.payload(config).days,3);assert.equal(a.payload(config).token,undefined);passed++;
- assert.equal(a.slot(p),a.slot({...p,interaction:'interactive'}));
- assert.equal(a.slot(p),a.slot(a.draft({...config,values:{...config.values,name:'Škola B',canteen:'12345'}},p).presentation));passed++;
- assert.equal(a.slot(a.presentation(config,'nsp','display','menu')),'menu:nsp:landscape:1:1');
+ assert.equal('slot' in a,false);assert.equal('matches' in a,false);passed++;
+ const nsp=a.presentation(config,'nsp','display','menu');assert.equal(nsp.geometry.layoutId,1);
  assert.throws(()=>a.presentation({...config,segment:{orientation:'landscape',style:99,block:1}},'nsp','display','menu'));passed++;
- assert.equal(a.slot(a.presentation(config,'kiosk','interactive','menu',{width:1080,height:1920})),'menu:kiosk:1080:1920:menu');
+ const kiosk=a.presentation(config,'kiosk','interactive','menu',{width:1080,height:1920});assert.equal(kiosk.geometry.height,1920);
  assert.throws(()=>a.presentation(config,'kiosk','interactive','menu',{}));passed++;
- assert.equal(a.matches({appId:'menu',profileId:'b'.repeat(32),draft:{presentation:p}},{profileId:'b'.repeat(32),slotId:'menu:web'}),true);
- assert.equal(a.matches({appId:'menu',profileId:'c'.repeat(32),draft:{presentation:p}},{profileId:'b'.repeat(32),slotId:'menu:web'}),false);passed++;
+ const saved=a.save({schemaVersion:1,...config},p);assert.equal(a.native(saved).values.canteen,'11592');assert.equal(a.storedPresentation(saved).mode,'web');assert.equal(saved.data,undefined);passed++;
  for(const patch of [{provider:'other'},{canteen:'1&token=bad'},{allergens:'false'},{name:'x'.repeat(121)},{days:'4'}])assert.throws(()=>a.payload({...config,values:{...config.values,...patch}}));passed++;
  class Node{constructor(){this.style={setProperty(){}};this.children=[];this.textContent='';this.hidden=false;this.parentElement={clientWidth:800};this.className='';this.clientHeight=900;}append(...v){this.children.push(...v);}replaceChildren(...v){this.children=v;}setAttribute(){}getBoundingClientRect(){return {height:40};}remove(){}getContext(){return null;}querySelectorAll(){return [];}querySelector(){return null;}}
  const nodes=new Map(),get=id=>{if(!nodes.has(id))nodes.set(id,new Node());return nodes.get(id);};
