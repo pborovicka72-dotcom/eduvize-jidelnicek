@@ -7,31 +7,6 @@
       "source": "https://www.strava.cz/strava5/Jidelnicky/XML?zarizeni=11592",
       "days": [
         {
-          "date": "2026-11-09",
-          "meals": [
-            {
-              "name": "Brokolicový krém",
-              "group": "Polévka",
-              "allergens": "01 -Obiloviny obsahující lepek,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Masové koule v rajčatové omáčce, Těstoviny",
-              "group": "Oběd 1",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Kuskus salát s vejcem, Pečivo",
-              "group": "Oběd 2",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Doplněk",
-              "group": "Doplněk",
-              "allergens": ""
-            }
-          ]
-        },
-        {
           "date": "2026-11-10",
           "meals": [
             {
@@ -357,7 +332,7 @@
           ]
         }
       ],
-      "updated": 1794187302.331008
+      "updated": 1794273249.718938
     }
   }
 }
