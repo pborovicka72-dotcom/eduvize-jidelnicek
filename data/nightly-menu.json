@@ -7,31 +7,6 @@
       "source": "https://www.strava.cz/strava5/Jidelnicky/XML?zarizeni=11592",
       "days": [
         {
-          "date": "2026-11-10",
-          "meals": [
-            {
-              "name": "Kuřecí polévka",
-              "group": "Polévka",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Kuřecí paličky Kentucky, Americké brambory, Salát Coleslaw",
-              "group": "Oběd 1",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,10 -Hořčice"
-            },
-            {
-              "name": "Gnocchi se zeleninovým ragú",
-              "group": "Oběd 2",
-              "allergens": "01 -Obiloviny obsahující lepek,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Doplněk",
-              "group": "Doplněk",
-              "allergens": ""
-            }
-          ]
-        },
-        {
           "date": "2026-11-11",
           "meals": [
             {
@@ -332,7 +307,7 @@
           ]
         }
       ],
-      "updated": 1794273249.718938
+      "updated": 1794359873.226013
     }
   }
 }
