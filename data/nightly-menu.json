@@ -7,31 +7,6 @@
       "source": "https://www.strava.cz/strava5/Jidelnicky/XML?zarizeni=11592",
       "days": [
         {
-          "date": "2026-11-12",
-          "meals": [
-            {
-              "name": "Polévka hrstková",
-              "group": "Polévka",
-              "allergens": "01 -Obiloviny obsahující lepek,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Vepřové na přírodno, Dušená rýže Basmati",
-              "group": "Oběd 1",
-              "allergens": "01 -Obiloviny obsahující lepek"
-            },
-            {
-              "name": "Asijská směs, Bulgur",
-              "group": "Oběd 2",
-              "allergens": "01 -Obiloviny obsahující lepek,06 -Sójové boby (sója),09 -Celer"
-            },
-            {
-              "name": "Doplněk",
-              "group": "Doplněk",
-              "allergens": ""
-            }
-          ]
-        },
-        {
           "date": "2026-11-13",
           "meals": [
             {
@@ -307,7 +282,7 @@
           ]
         }
       ],
-      "updated": 1794446729.66323
+      "updated": 1794532949.906407
     }
   }
 }
