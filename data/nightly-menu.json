@@ -7,31 +7,6 @@
       "source": "https://www.strava.cz/strava5/Jidelnicky/XML?zarizeni=11592",
       "days": [
         {
-          "date": "2026-11-13",
-          "meals": [
-            {
-              "name": "Polévka houbová z hlívy ústřičné (á la dršťková)",
-              "group": "Polévka",
-              "allergens": "01 -Obiloviny obsahující lepek,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Rybí filé na másle, Bramborová kaše",
-              "group": "Oběd 1",
-              "allergens": "01 -Obiloviny obsahující lepek,04 -Ryby,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Zeleninový burger",
-              "group": "Oběd 2",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Doplněk",
-              "group": "Doplněk",
-              "allergens": ""
-            }
-          ]
-        },
-        {
           "date": "2026-11-16",
           "meals": [
             {
@@ -282,7 +257,7 @@
           ]
         }
       ],
-      "updated": 1794532949.906407
+      "updated": 1794618894.390468
     }
   }
 }
