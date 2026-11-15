@@ -1,7 +1,10 @@
 'use strict';
-const p=new URLSearchParams(location.search),$=id=>document.getElementById(id),mode=EduvizeOutputModes.mode();
+const published=document.documentElement.dataset.menuPublished==='true';
+const p=published?new URLSearchParams():new URLSearchParams(location.search),$=id=>document.getElementById(id);
+let mode=published?'web':EduvizeOutputModes.mode();
+let publication=null,publicationSignal=null,publicationRun=0,outputRuntime=null;
 document.documentElement.dataset.outputMode=mode;
-const canteen=p.get('canteen')||'11592',provider=p.get('provider')||'strava',presentation=p.get('presentation')||(p.get('days')==='1'?'day':'overview'),days=presentation==='day'?1:Math.max(2,Math.min(10,Number(p.get('days'))||5)),showAllergens=p.get('allergens')!=='0';
+let canteen=p.get('canteen')||'11592',provider=p.get('provider')||'strava',presentation=p.get('presentation')||(p.get('days')==='1'?'day':'overview'),days=presentation==='day'?1:Math.max(2,Math.min(10,Number(p.get('days'))||5)),showAllergens=p.get('allergens')!=='0';
 let data=null,signature='',pending=false,anchor='',timer=null;
 const make=(tag,text,cls)=>{const el=document.createElement(tag);el.textContent=text;if(cls)el.className=cls;return el;};
 const dateLabel=date=>new Intl.DateTimeFormat('cs-CZ',{weekday:'long',day:'numeric',month:'long'}).format(new Date(date+'T12:00:00'));
@@ -25,7 +28,14 @@ function allDays(){return data.days.slice(0,days).map((day,index)=>{
  return {date:day.date,title:title(day.date,index),dateLabel:dateLabel(day.date),groups};
 });}
 function geometry(){
- const g=EduvizeSegmentProfile.resolve(innerWidth,innerHeight),profile=EduvizeMealBoard.profile(innerWidth,innerHeight,mode);
+ const fixed=published&&window.EduvizePublishedOutput?.metrics.geometry;
+ const width=fixed?.width||innerWidth,height=fixed?.height||innerHeight;
+ if(published){const app=$('menu-app'),fixedMode=mode!=='web';
+  app.style.width=fixedMode?width+'px':'';app.style.height=fixedMode?height+'px':'';
+  app.style.transformOrigin='top left';app.style.transform=fixedMode?'scale('+Math.min(innerWidth/width,innerHeight/height)+')':'';
+  document.body.style.overflow=fixedMode?'hidden':'';
+ }
+ const g=EduvizeSegmentProfile.resolve(width,height),profile=EduvizeMealBoard.profile(width,height,mode);
  document.documentElement.style.setProperty('--menu-gap',profile.gap+'px');
  document.documentElement.style.setProperty('--meal-gap',profile.gap+'px');
  document.documentElement.style.setProperty('--meal-body',profile.body+'px');
@@ -64,21 +74,49 @@ function render(){
  const nav=host.querySelector('.edu-pagination');
  const target=spreads.findIndex(page=>page.days.some(day=>day.date===savedAnchor));
  if(target>=0){const controls=nav.querySelectorAll('button');while(currentPage>target)controls[0].click();while(currentPage<target)controls[1].click();}
- // Interactivity and timed paging are owned by the shared output contract.
+ // Published mode uses the registry presentation, never browser preferences.
+ if(published&&!EduvizeOutputModes.isInteractive()&&spreads.length>1){
+  timer=setInterval(()=>{const controls=nav.querySelectorAll('button');if(controls.length<2)return;if(!controls[controls.length-1].disabled)controls[controls.length-1].click();else while(!controls[0].disabled)controls[0].click();},12000);
+ }
 
 }
 async function load(){
- if(pending)return;pending=true;
- try{const response=await fetch('/api/menu?'+new URLSearchParams({provider,canteen}),{cache:'no-store'}),result=await response.json();if(!response.ok)throw Error(result.detail||'Jídelníček se nepodařilo načíst.');
+ if(pending||published&&(!publication||publicationSignal?.aborted))return;pending=true;
+ const run=publicationRun;
+ try{const url=published?'/api/public/v1/outputs/'+publication.id+'/data':'/api/menu?'+new URLSearchParams({provider,canteen});
+  const response=await fetch(url,{cache:'no-store',credentials:published?'omit':'same-origin',signal:publicationSignal||AbortSignal.timeout(15000)}),envelope=await response.json();
+  if(published&&(run!==publicationRun||publicationSignal?.aborted))return;
+  if(!response.ok){const error=Error('Jídelníček se nepodařilo načíst.');error.status=response.status;throw error;}
+  const result=published?envelope.data:envelope;
+  if(published&&(envelope.schemaVersion!==1||typeof envelope.stale!=='boolean'||envelope.complete!==true||result?.provider!==provider||result?.canteen!==canteen||!Array.isArray(result.days)))throw Error('Neplatná data jídelníčku.');
   $('message').textContent=result.stale?result.warning:'';$('message').hidden=!result.stale;
   const next=JSON.stringify([result.days,result.today]);data=result;
   const changed=next!==signature;signature=next;
   const link=make('a','Zdroj: '+(provider==='strava'?'Strava.cz':provider)+' · jídelna '+canteen);link.href=data.source;link.target='_self';$('menu-source').replaceChildren(link,make('span',' · Aktualizováno '+new Intl.DateTimeFormat('cs-CZ',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Prague'}).format(new Date(data.updated*1000))));
   if(changed)render();
- }catch(error){$('message').hidden=false;$('message').textContent=error.message;}finally{pending=false;}
+ }catch(error){if(published&&(run!==publicationRun||publicationSignal?.aborted))return;if(published&&[401,403,404,410].includes(error.status)){clearPublication(error);return;}$('message').hidden=false;$('message').textContent=error.message;}finally{if(!published||run===publicationRun)pending=false;}
 }
 let resizeFrame;addEventListener('resize',()=>{cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(render);});
-document.fonts?.ready.then(()=>{if(data)render();});geometry();load();setInterval(load,300000);
+document.fonts?.ready.then(()=>{if(data)render();});
+function clearPublication(){
+ publicationRun++;publication=null;data=null;signature='';clearInterval(timer);
+ $('menu-content').replaceChildren();$('menu-source').replaceChildren();$('menu-subtitle').textContent='';
+ $('message').hidden=false;$('message').textContent='Tento výstup není dostupný.';
+}
+if(published){
+ try{outputRuntime=EduvizeOutputRuntime.start({appId:'menu',clear:clearPublication,
+  render:async(snapshot,metrics,context)=>{
+   const v=snapshot.payload;
+   if(v?.provider!=='strava'||!/^\d{4,6}$/.test(v.canteen||'')||typeof v.name!=='string'||!['day','overview'].includes(v.presentation)||!Number.isInteger(v.days)||v.days<1||v.days>10||typeof v.allergens!=='boolean'||typeof v.showTime!=='boolean')throw Error('Neplatné nastavení jídelníčku.');
+   publicationRun++;publication=snapshot;publicationSignal=context.signal;
+   mode=snapshot.presentation.mode;provider=v.provider;canteen=v.canteen;presentation=v.presentation;days=v.days;showAllergens=v.allergens;
+   p.set('name',v.name);p.set('showTime',v.showTime?'1':'0');signature='';pending=false;
+   document.documentElement.dataset.outputMode=mode;
+   geometry();await load();
+  },onError:()=>{if(!data){$('message').hidden=false;$('message').textContent='Jídelníček nyní není dostupný.';}}
+ });}catch{clearPublication();}
+}else{geometry();load();}
+setInterval(load,300000);
 
 // Prefer the complete date; use its numeric form when the shared title scale cannot fit.
 const dateMeasure=document.createElement('canvas').getContext('2d');

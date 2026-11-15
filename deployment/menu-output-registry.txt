@@ -1,0 +1,100 @@
+Jídelníček / shared output registry integration (TEST only)
+
+Python package in administration image:
+  COPY eduvize-jidelnicek/eduvize_menu -> /app/vendor/eduvize-jidelnicek/eduvize_menu
+  append /app/vendor/eduvize-jidelnicek to PYTHONPATH
+  append eduvize_menu.output_adapter to EDUVIZE_OUTPUT_ADAPTER_MODULES
+  EDUVIZE_MENU_INTERNAL_URL=http://menu:8000 (default), same TEST network only
+  retain existing entitlement, school/profile ownership, theme and registry guards.
+  No new table, migration, resolver, proxy or network egress permission.
+
+Registered app: menu; renderer: /jidelnicek/published.html
+Strict payload v1:
+  provider='strava'; canteen=4..6 ASCII digits; name<=120chars;
+  presentation='day' with days=1 OR 'overview' with days=3,5,10;
+  allergens/showTime are real booleans. No profile/owner/connection IDs or URL.
+Presentation: the existing output_schemas.Presentation without any extension.
+Live hook calls existing menu service /api/menu for saved provider/canteen only;
+queries on public /data are rejected. Rebuilds public data; does not forward
+provider headers, source URL or unvalidated fields. Existing service owns cache,
+stale policy and direct Strava XML connector.
+
+Exact public GET/HEAD renderer/dependency allowlist (no POST/write exemption):
+  /jidelnicek/published.html
+  /jidelnicek/menu.js
+  /jidelnicek/menu.css
+  /jidelnicek/meal-model.js
+  /jidelnicek/favicon.svg (existing optional)
+  /eduvize-styly/design-system/assets/eduvize-favicon.svg
+  /eduvize-styly/design-system/admin-tokens.css
+  /eduvize-styly/design-system/navigation.css (admin-components import)
+  /eduvize-styly/design-system/kiosk-reading.css (output-header import)
+  /eduvize-styly/design-system/admin-components.css
+  /eduvize-styly/design-system/admin-shell.css
+  /eduvize-styly/design-system/output-header.css
+  /eduvize-styly/design-system/paged-panel.css
+  /eduvize-styly/design-system/web-brand.css
+  /eduvize-styly/design-system/nsp-segments.css
+  /eduvize-styly/design-system/meal-board.css
+  /eduvize-styly/design-system/app-icons.css
+  /eduvize-styly/design-system/nsp-geometry.js
+  /eduvize-styly/design-system/segment-profile.js
+  /eduvize-styly/design-system/output-header.js
+  /eduvize-styly/design-system/paged-panel.js
+  /eduvize-styly/design-system/typography.js
+  /eduvize-styly/design-system/meal-board.js
+  /eduvize-styly/design-system/output-client.js
+  /eduvize-styly/design-system/output-runtime.js
+  /_environment.js (compiler-inserted TEST marker)
+  existing registry /o/{opaque32hex}, /api/public/v1/outputs/{opaque32hex},
+    /theme, /data; all perform normal live authorization/entitlement checks.
+Keep config.html/config.js/menu-output-actions.js/menu-output-settings.js,
+private configuration/profile APIs and /api/v1/outputs mutations behind auth.
+Do NOT allow profile query as substitute for an opaque output ID.
+
+Source UI integration:
+  existing actions retain order; adds one Generate/Update action before Copy.
+  menu-output-actions.js is only an app bridge to Accounts-owned output-actions.js.
+  Requires FROZEN OutputActions V2 (SHA256 48bd6c1ec321c6eb37478ce6ae861999630bfa80d99477c5792cdb040c94c050),
+  V2 output-client.js with lookupOutputSlot, and shared load-saved-app.js.
+  Context is schoolId/profileId/appId/presentation only. No local slotId,
+  matcher, resolve, hash calculation or cloned shared controller.
+  Shared canonical slot owns web, NSP and actual kiosk viewport identity;
+  kioskLayout/interaction/content/theme are excluded from slot identity.
+  Menu source/name/days/allergens/time/interaction/theme do not change slot identity.
+  Generate checks saved profile content then shared create/save/publish flow.
+  Copy/Open are GET-only and use client.lookupOutputSlot via the shared controller.
+  A fresh saved-reader load(context) supplies native config; unsaved form reads
+  only detect edits and never become the generated payload. Ordinary Save stores
+  the full Presentation in native config.presentation and preserves values/segment.
+  Old records without Presentation remain readable; Save once before Generate.
+  Kiosk apply validates saved Presentation, then calls shared
+  EduvizeSegmentSelection.setKioskGeometry({width,height,orientation}) BEFORE
+  form/mode changes. False/missing setter fails closed without a DOM-click fallback.
+  Capture reads shared kioskGeometry() or actual data-preview-width/height attrs,
+  never a CSS-scaled client rectangle or a browser-preference fallback.
+  Deployment dependency: the editorial-admin.js wrapper used by this application
+  must expose setKioskGeometry/kioskGeometry too. Styles PR33 ccbfb792 adds the
+  shared picker setter and autoMount getter, but its editorial wrapper still needs
+  the owner-provided hook; do not claim kiosk restore from autoMount-only coverage.
+  actions.refresh() runs GET-only on initial install and profile/auth/mode changes.
+  Save settings never calls OutputRegistry. Old prototype handlers are detached;
+  the legacy publishedOutput function and Copy/Open handlers are removed.
+  Old output.html?edu-menu and legacy parameterized routes are retained unchanged.
+
+Source CI runs provider/snapshot regressions and published JS behavior.
+Coordinated bundle CI must also run:
+  PYTHONPATH=<private admin source>:<menu source> python -m unittest discover -s tests/shared-registry -p 'test_output*.py' -v
+  node -e "const fs=require('fs');require('./tests/menu-output-v2.test.cjs')(fs.readFileSync(process.env.SHARED_SAVED_READER,'utf8')).catch(e=>{console.error(e);process.exitCode=1})"
+Set SHARED_SAVED_READER to the reviewed shared load-saved-app.js asset.
+The app bridge test reads that exact shared implementation; it does not vendor it.
+Requires the private admin package + its existing pydantic/FastAPI/psycopg test deps.
+Never vendor that private source into this repository or add a cross-repo secret.
+
+Runtime acceptance (Server is the sole VPS executor):
+  deploy candidate, verify internal menu service reachable and real menu data;
+  authenticated Generate through ordinary UI, public snapshot/theme/data and
+  rendered meals without session; update settings explicitly, same URL;
+  fresh browser read-only Copy/Open; revoked/license/foreign-profile checks;
+  block Render client+server and test cold menu service/cache, restore rules.
+No runtime or real public link acceptance is claimed by the source tests alone.
