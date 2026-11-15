@@ -1,40 +1,40 @@
-/* Thin menu bridge to frozen shared OutputActions V2; no local slot or resolver. */
+/* Native opt-in to the shared saved-copy-preview workflow; no app-owned generator. */
 (function(root){'use strict';
  async function install(){
-  const button=document.getElementById('generate-menu-output'),status=document.getElementById('output-status');
-  if(!button)return;
-  const copy=document.getElementById('copy'),open=document.getElementById('open');
-  // Legacy publication handlers must never run alongside the shared controller.
+  const status=document.getElementById('output-status'),copy=document.getElementById('copy'),open=document.getElementById('open');
+  if(!copy||!open)return;
   copy.onclick=null;open.onclick=null;copy.disabled=true;open.disabled=true;
-  const auth=root.EduvizeAdminAuth,settings=root.EduvizeMenuOutputSettings;
-  if(!auth||!settings||root.EduvizeOutputActions?.schemaVersion!==2||!root.EduvizeOutputClient||!root.EduvizeSavedOutputSettings){status.textContent='Vytváření odkazů nyní není dostupné.';return;}
+  const auth=root.EduvizeAdminAuth,settings=root.EduvizeMenuOutputSettings,adapter=root.EduvizeProfileAdapter;
+  if(!auth||!settings||!adapter||root.EduvizeOutputActions?.schemaVersion!==2||!root.EduvizeOutputClient||!root.EduvizeSavedOutputSettings){status.textContent='Ovládání výstupu nyní není dostupné.';return;}
   await auth.ready;
   const saved=root.EduvizeSavedOutputSettings.create({auth,profiles:root.EduvizeProfiles});
-  function current(){
-   root.EduvizeProfileAdapter.validate();
-   const config=root.EduvizeProfileAdapter.read();
-   return {config,p:settings.capture(config)};
-  }
   function context(){
    const s=auth.status();if(!s.connected||!s.schoolId||!/^[a-f0-9]{32}$/.test(s.profileId||''))throw Error('Vyberte uložený profil své školy.');
-   return {schoolId:s.schoolId,profileId:s.profileId,appId:'menu',presentation:current().p};
+   return {schoolId:s.schoolId,profileId:s.profileId,appId:'menu',presentation:settings.capture({segment:root.EduvizeProfiles.segment()})};
   }
   const client=root.EduvizeOutputClient.create({origin:location.origin,getAuthorization:()=>{const token=auth.getToken('configurations')||auth.getToken('documents');return token?'Bearer '+token:'';}});
   if(typeof client.lookupOutputSlot!=='function')throw Error('Společné ovládání výstupů vyžaduje aktualizaci.');
-  async function draft(){
-   const before=context(),form=current(),stored=await saved.load(before);
-   if(JSON.stringify(context())!==JSON.stringify(before)||JSON.stringify(current())!==JSON.stringify(form))throw Error('Nastavení nebo profil se mezitím změnily.');
-   const p=settings.storedPresentation(stored.config);
-   if(JSON.stringify(p)!==JSON.stringify(form.p)||JSON.stringify(settings.payload(settings.native(stored.config)))!==JSON.stringify(settings.payload(settings.native(form.config))))throw Error('Nejprve uložte aktuální nastavení do Eduvize.');
-   return settings.draft(stored.config,p);
+  async function draft({savedCommit=null}={}){
+   const before=context();let config;
+   if(savedCommit){
+    if(savedCommit.profileId!==before.profileId||savedCommit.appId!=='menu'||!Number.isSafeInteger(savedCommit.revision)||savedCommit.revision<0||savedCommit.config?.schemaVersion!==1)throw Error('Nelze ověřit potvrzené uložení jídelníčku.');
+    // This is the exact successful PUT snapshot, never the form after an await.
+    config=JSON.parse(JSON.stringify(savedCommit.config));
+   }else config=(await saved.load(before)).config;
+   const after=context();if(before.schoolId!==after.schoolId||before.profileId!==after.profileId)throw Error('Účet nebo profil se mezitím změnil.');
+   return settings.draft(config,settings.storedPresentation(config));
   }
-  const actions=root.EduvizeOutputActions.mount({client,context,draft,elements:{generateButton:button,copyButton:copy,openButton:open,status}});
-  root.EduvizeMenuOutputActions=actions;
+  const actions=root.EduvizeOutputActions.mount({workflow:'saved-copy-preview',client,context,draft,
+   previewDraftUrl:()=>adapter.previewDraftUrl(),elements:{copyButton:copy,openButton:open,status}});
+  if(actions.workflow!=='saved-copy-preview'||typeof actions.withSavedCommit!=='function')throw Error('Společné ovládání výstupů vyžaduje aktualizaci.');
+  adapter.outputActions=actions;root.EduvizeMenuOutputActions=actions;
   const refresh=()=>actions.refresh().catch(()=>{});
-  document.querySelector('.edu-output-section').addEventListener('change',refresh);
-  for(const event of ['eduvize-profile-selected','eduvize-admin-auth-change','eduvize-profile-adapter-ready'])root.addEventListener(event,refresh);
-  button.disabled=false;copy.disabled=false;open.disabled=false;
-  await refresh(); // GET-only lookup updates Generate/Update after a normal reload.
+  const host=document.querySelector('.edu-output-section');host.addEventListener('change',refresh);
+  host.addEventListener('click',event=>{if(event.isTrusted&&event.target.closest?.('#ev-tabs button,#ev-cards button,#ev-blocks button,.edu-web-preview-controls button'))queueMicrotask(()=>document.dispatchEvent(new Event('eduvize-profile-change')));});
+  for(const event of ['eduvize-profile-selected','eduvize-admin-auth-change'])root.addEventListener(event,refresh);
+  copy.disabled=false;open.disabled=false;
+  root.dispatchEvent(new Event('eduvize-profile-adapter-ready'));
+  await refresh();
  }
- install().catch(()=>{const n=document.getElementById('output-status');if(n)n.textContent='Vytváření odkazů nyní není dostupné.';});
+ install().catch(()=>{const n=document.getElementById('output-status');if(n)n.textContent='Ovládání výstupu nyní není dostupné.';});
 })(window);
