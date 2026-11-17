@@ -53,7 +53,7 @@ def parse_menu(content):
     days = {}
     day = group = None
     for line in lines:
-        match = DATE.fullmatch(line)
+        match = DATE.search(line) if len(line) < 80 else None
         if match:
             try:
                 day = datetime(int(match[3]), int(match[2]), int(match[1])).date().isoformat()
