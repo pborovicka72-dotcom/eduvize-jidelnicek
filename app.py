@@ -10,7 +10,7 @@ from pathlib import Path
 from urllib.parse import urlparse,parse_qs
 from zoneinfo import ZoneInfo
 from connectors.strava import StravaConnector,MenuError
-from connectors.icanteen import ICanteenConnector
+from connectors.icanteen import ICanteenConnector, source_url
 ROOT=Path(__file__).resolve().parent
 PROVIDERS={'strava':StravaConnector(),'icanteen':ICanteenConnector()}
 CACHE={}
@@ -29,7 +29,8 @@ def read_snapshot(provider, canteen):
 
 def load_menu(provider,canteen):
     if provider not in PROVIDERS:raise MenuError('Vyberte podporovanou službu jídelníčku.')
-    if not re.fullmatch(r'\d{4,6}',canteen):raise MenuError('Číslo jídelny musí mít 4 až 6 číslic.')
+    if provider == 'icanteen':source_url(canteen)
+    elif not re.fullmatch(r'\d{4,6}',canteen):raise MenuError('Číslo jídelny musí mít 4 až 6 číslic.')
     key=(provider,canteen)
     with LOCKS[hash(key)%len(LOCKS)]:
         cached=CACHE.get(key);now=time.time()
