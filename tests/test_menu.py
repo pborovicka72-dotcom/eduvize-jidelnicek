@@ -10,6 +10,11 @@ class Tests(unittest.TestCase):
   with self.assertRaises(MenuError):parse_menu(b'<!DOCTYPE x><jidelnicky/>')
  def test_invalid_id(self):
   with self.assertRaises(MenuError):app.load_menu('strava','../../etc')
+ def test_custom_icanteen_url(self):
+  url='https://englisova.skolnijidelny.cz/login'
+  app.CACHE.clear()
+  with patch.object(app,'read_snapshot',return_value=None),patch.object(app.PROVIDERS['icanteen'],'fetch',return_value={'days':[],'source':url}) as fetch:
+   self.assertEqual(app.load_menu('icanteen',url)['source'],url);fetch.assert_called_once_with(url)
  def test_unknown_provider(self):
   with self.assertRaises(MenuError):app.load_menu('unknown','11592')
  def test_cached(self):

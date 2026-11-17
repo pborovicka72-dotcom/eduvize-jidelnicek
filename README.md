@@ -1,6 +1,6 @@
 # Eduvize · Jídelníček
 
-Konektory: veřejný XML jídelníček Strava.cz a veřejný jídelníček na přihlašovací stránce iCanteen (strav.nasejidelna.cz). Ověřená jídelna: **11592**.
+Konektory: veřejný XML jídelníček Strava.cz a veřejný jídelníček na přihlašovací stránce iCanteen (hostovaná i vlastní HTTPS doména). Ověřená jídelna: **11592**.
 Nepracuje s účty strávníků ani s objednáváním jídel.
 
 ## Spuštění
@@ -21,7 +21,9 @@ v paměti procesu; po restartu ji může naplnit poslední platný noční sním
 Dokumentace poskytovatele:
 https://www.strava.cz/strava/napoveda/cz/prilohy/Odkaz_na_XML_jidelnicek.pdf
 
-iCanteen se vybírá jako druhá služba v administraci. Zadejte čtyřmístný kód z adresy veřejné přihlašovací stránky, například `0340` pro `https://strav.nasejidelna.cz/0340/login`. Konektor čte pouze veřejně zobrazený jídelníček a nepotřebuje účet strávníka. Jídelny na vlastních doménách budou vyžadovat zvláštní ověřené napojení. Do `nightly-sources.json` přidejte konkrétní iCanteen jídelnu až po ověření jejího kódu.
+iCanteen se vybírá jako druhá služba v administraci. Lze zadat kód hostované jídelny, například `0340`, nebo její HTTPS adresu, například `https://strav.nasejidelna.cz/0340` či `https://englisova.skolnijidelny.cz/login`. Konektor čte pouze veřejně zobrazený jídelníček a nepotřebuje účet strávníka. Každý vlastní server musí před zapojením školy projít testem dostupnosti a formátu. Do `nightly-sources.json` přidejte konkrétní jídelnu až po ověření její adresy.
+
+Oficiální [uživatelský manuál iCanteen](https://strav.nasejidelna.cz/0345/help) popisuje přihlášení jménem a heslem a možnost vlastního webserveru. [Výrobce Z-WARE](https://nasejidelna.cz/) uvádí hostování i varianty nastavení. Veřejný popis integračního API ani smlouvu pro strojové čtení soukromého jídelníčku tyto zdroje neobsahují. Proto se heslo do profilu ani veřejného odkazu neukládá. Pokud konkrétní škola veřejný jídelníček nezveřejňuje, je pro další konektor potřeba její URL, testovací účet a rozhraní či souhlas dodavatele.
 
 ## Prezentace jídelníčku
 

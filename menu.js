@@ -36,7 +36,7 @@ function geometry(){
 }
 function render(){
  if(!data)return;clearInterval(timer);const profile=geometry(),selected=allDays(),host=$('menu-content');
- $('menu-title').textContent='Jídelníček';$('menu-subtitle').textContent=p.get('name')||'Jídelna '+canteen;
+ $('menu-title').textContent='Jídelníček';$('menu-subtitle').textContent=p.get('name')||(provider==='icanteen'&&canteen.startsWith('https://')?'Jídelna iCanteen':'Jídelna '+canteen);
 
  if(!selected.length){host.replaceChildren(make('p','Jídelna zatím nezveřejnila jídelníček pro následující dny.','menu-empty'));return;}
  const options={paths:EduvizeMeals.paths,allergens:showAllergens,horizontal:profile.horizontal};
@@ -73,7 +73,8 @@ async function load(){
   $('message').textContent=result.stale?result.warning:'';$('message').hidden=!result.stale;
   const next=JSON.stringify([result.days,result.today]);data=result;
   const changed=next!==signature;signature=next;
-  const link=make('a','Zdroj: '+(provider==='strava'?'Strava.cz':provider)+' · jídelna '+canteen);link.href=data.source;link.target='_self';$('menu-source').replaceChildren(link,make('span',' · Aktualizováno '+new Intl.DateTimeFormat('cs-CZ',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Prague'}).format(new Date(data.updated*1000))));
+  const sourceLabel=provider==='icanteen'&&canteen.startsWith('https://')?'iCanteen':(provider==='strava'?'Strava.cz':'iCanteen')+' · jídelna '+canteen;
+  const link=make('a','Zdroj: '+sourceLabel);link.href=data.source;link.target='_self';$('menu-source').replaceChildren(link,make('span',' · Aktualizováno '+new Intl.DateTimeFormat('cs-CZ',{hour:'2-digit',minute:'2-digit',timeZone:'Europe/Prague'}).format(new Date(data.updated*1000))));
   if(changed)render();
  }catch(error){$('message').hidden=false;$('message').textContent=error.message;}finally{pending=false;}
 }
