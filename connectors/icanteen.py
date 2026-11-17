@@ -16,7 +16,8 @@ from connectors.strava import MenuError
 HOST = 'strav.nasejidelna.cz'
 MAX_BYTES = 2_000_000
 DATE = re.compile(r'(?:(?:pondělí|úterý|středa|čtvrtek|pátek|sobota|neděle)\s+|Jídelníček na\s+)?(\d{1,2})\.(\d{1,2})\.(\d{4})', re.I)
-GROUP = re.compile(r'^(?:Oběd\s*\d+|Přesnídávka|Svačina|Večeře(?:\s*\d+)?|Dieta|Polévka)$', re.I)
+GROUP = re.compile(r'^(?:Oběd(?:\\s*(?:\\d+|[A-Z]{2,4}))?|Dop\\.\\s*svačina|Odp\\.\\s*svačina|Přesnídávka|Svačina|Večeře(?:\\s*\\d+)?|Dieta|Polévka)$', re.I)
+INLINE_ALLERGENS = re.compile(r'\\bA\\s*:\\s*((?:\\d{1,2}\\s*,?\\s*)+)', re.I)
 ALLERGENS = re.compile(r'(?:_?\{)?\s*[\[(]\s*(?:A\s*:\s*)?((?:\d{1,2}[a-z]?\s*[,;]?\s*)+)[\])]\s*(?:\})?\s*$', re.I)
 
 
@@ -75,8 +76,12 @@ def parse_menu(content):
                 continue
             allergen = ALLERGENS.search(line)
             name = line[:allergen.start()].strip(' ,;') if allergen else line
+            codes = re.findall(r'\\d{1,2}', allergen.group(1)) if allergen else []
+            for item in INLINE_ALLERGENS.finditer(name):
+                codes.extend(re.findall(r'\\d{1,2}', item.group(1)))
+            name = INLINE_ALLERGENS.sub('', name).strip(' ,;')
             if name:
-                meal = {'name': name, 'group': group, 'allergens': allergen.group(1).strip() if allergen else ''}
+                meal = {'name': name, 'group': group, 'allergens': ', '.join(dict.fromkeys(codes))}
                 meals = days.setdefault(day, [])
                 if meal not in meals:
                     meals.append(meal)
