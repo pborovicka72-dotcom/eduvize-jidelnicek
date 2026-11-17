@@ -9,7 +9,9 @@ function syncPresentation(){$('days-field').hidden=$('presentation').value==='da
 $('presentation').addEventListener('change',syncPresentation);syncPresentation();
 function values(){return Object.fromEntries(ids.map(id=>[id,['allergens','showTime'].includes(id)?$(id).checked:$(id).value.trim()]));}
 function output(){const u=new URL('index.html',location.href);for(const [k,v]of Object.entries(values()))u.searchParams.set(k,typeof v==='boolean'?(v?'1':'0'):v);return EduvizeOutputModes.url(u,$('viewMode').value).href;}
-function validate(){if(!/^\d{4,6}$/.test($('canteen').value.trim()))throw Error('Číslo jídelny musí mít 4 až 6 číslic.');}
+function validSource(provider,source){if(provider==='strava')return /^\d{4,6}$/.test(source);if(/^\d{4,6}$/.test(source))return true;try{const u=new URL(source);return u.protocol==='https:'&&!!u.hostname&&!!u.pathname&&!u.username&&!u.password&&!u.search&&!u.hash}catch{return false}}
+function validate(){if(!validSource($('provider').value,$('canteen').value.trim()))throw Error($('provider').value==='icanteen'?'Zadejte kód jídelny nebo její veřejnou HTTPS adresu.':'Číslo jídelny musí mít 4 až 6 číslic.');}
+function syncSource(){$('canteen-label').textContent=$('provider').value==='icanteen'?'Kód jídelny nebo HTTPS adresa':'Číslo jídelny';$('canteen').inputMode=$('provider').value==='icanteen'?'url':'numeric';$('canteen').placeholder=$('provider').value==='icanteen'?'0340 nebo https://strav.nasejidelna.cz/0340':'Například 11592';}syncSource();
 const preview=EduvizeEditorialAdmin.mount({mode:$('viewMode'),url:output,key:'eduvize-menu-segment',host:document.querySelector('.edu-output-section')});
 let menuRequest=0,menuTimer,menuController;
 async function loadMenu(){
@@ -29,7 +31,7 @@ async function loadMenu(){
  }catch(error){
   if(request!==menuRequest||error.name==='AbortError')return;
   $('status').textContent=error.message;
-  $('retry-menu').hidden=!/^\d{4,6}$/.test($('canteen').value.trim());
+  $('retry-menu').hidden=!validSource($('provider').value,$('canteen').value.trim());
  }
 }
 function scheduleMenu(){
@@ -40,7 +42,7 @@ function scheduleMenu(){
 }
 $('retry-menu').onclick=loadMenu;
 $('canteen').addEventListener('input',scheduleMenu);
-$('provider').addEventListener('change',scheduleMenu);
+$('provider').addEventListener('change',()=>{syncSource();scheduleMenu();});
 loadMenu();
 $('saveLocal').onclick=()=>{try{validate();localStorage.setItem(key,JSON.stringify(values()));$('output-status').textContent='Uloženo v tomto prohlížeči.'}catch(error){$('output-status').textContent=error.message}};
 async function publishedOutput(){
@@ -65,9 +67,9 @@ window.EduvizeProfileAdapter={
  validate,
  read:()=>({schemaVersion:1,publicOutput:true,values:values(),segment:window.EduvizeProfiles.segment()}),
  apply:async config=>{
-  if(config?.schemaVersion!==1||!config.values||!/^\d{4,6}$/.test(String(config.values.canteen||'')))throw Error('Neplatné nastavení jídelníčku.');
+  if(config?.schemaVersion!==1||!config.values||!validSource(config.values.provider||'strava',String(config.values.canteen||'')))throw Error('Neplatné nastavení jídelníčku.');
   window.EduvizeProfiles.fields(ids).apply({showTime:false,...config.values});
-  syncPresentation();window.EduvizeProfiles.applySegment(config.segment);
+  syncPresentation();syncSource();window.EduvizeProfiles.applySegment(config.segment);
   localStorage.setItem(key,JSON.stringify(values()));preview.refresh();loadMenu();
  }
 };
