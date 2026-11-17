@@ -93,8 +93,12 @@ def source_url(value):
         raise MenuError('Zadejte kód jídelny nebo její HTTPS adresu.')
     parsed = urlparse(value)
     hostname = parsed.hostname
+    try:
+        port = parsed.port
+    except ValueError as error:
+        raise MenuError('Neplatná HTTPS adresa iCanteen.') from error
     if (parsed.scheme != 'https' or not hostname or parsed.username or parsed.password
-            or parsed.port not in (None, 443) or parsed.query or parsed.fragment
+            or port not in (None, 443) or parsed.query or parsed.fragment
             or not re.fullmatch(r'[A-Za-z0-9.-]+', hostname)
             or hostname.startswith('.') or '..' in hostname
             or len(hostname.split('.')) < 2 or len(hostname.rsplit('.', 1)[-1]) < 2
