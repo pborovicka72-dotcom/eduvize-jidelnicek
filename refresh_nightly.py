@@ -8,6 +8,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 from app import PROVIDERS, ROOT
 from connectors.strava import MenuError
+from connectors.icanteen import source_url
 
 SNAPSHOT = ROOT / 'data' / 'nightly-menu.json'
 SOURCES = ROOT / 'nightly-sources.json'
@@ -38,7 +39,13 @@ def refresh(*, force=False, now=None, snapshot=SNAPSHOT, sources_path=SOURCES, s
     failures = []
     for source in sources:
         provider, canteen = source['provider'], source['canteen']
-        if provider not in PROVIDERS or not re.fullmatch(r'\d{4,6}', canteen):
+        if provider not in PROVIDERS:
+            raise ValueError('Invalid nightly menu provider')
+        try:
+            if provider == 'icanteen':source_url(canteen)
+            elif not re.fullmatch(r'\d{4,6}', canteen):raise ValueError('Invalid Strava canteen ID')
+        except MenuError as error:
+            raise ValueError('Invalid nightly menu source') from error
             raise ValueError('Invalid nightly menu source')
         for attempt in range(4):
             try:
