@@ -10,8 +10,9 @@ from pathlib import Path
 from urllib.parse import urlparse,parse_qs
 from zoneinfo import ZoneInfo
 from connectors.strava import StravaConnector,MenuError
+from connectors.icanteen import ICanteenConnector
 ROOT=Path(__file__).resolve().parent
-PROVIDERS={'strava':StravaConnector()}
+PROVIDERS={'strava':StravaConnector(),'icanteen':ICanteenConnector()}
 CACHE={}
 LOCKS=[threading.Lock() for _ in range(16)]
 TTL=900
