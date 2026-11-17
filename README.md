@@ -1,6 +1,6 @@
 # Eduvize · Jídelníček
 
-První konektor: veřejný XML jídelníček Strava.cz. Ověřená jídelna: **11592**.
+Konektory: veřejný XML jídelníček Strava.cz a veřejný jídelníček na přihlašovací stránce iCanteen (strav.nasejidelna.cz). Ověřená jídelna: **11592**.
 Nepracuje s účty strávníků ani s objednáváním jídel.
 
 ## Spuštění
@@ -20,6 +20,8 @@ v paměti procesu; po restartu ji může naplnit poslední platný noční sním
 
 Dokumentace poskytovatele:
 https://www.strava.cz/strava/napoveda/cz/prilohy/Odkaz_na_XML_jidelnicek.pdf
+
+iCanteen se vybírá jako druhá služba v administraci. Zadejte čtyřmístný kód z adresy veřejné přihlašovací stránky, například `0340` pro `https://strav.nasejidelna.cz/0340/login`. Konektor čte pouze veřejně zobrazený jídelníček a nepotřebuje účet strávníka. Jídelny na vlastních doménách budou vyžadovat zvláštní ověřené napojení. Do `nightly-sources.json` přidejte konkrétní iCanteen jídelnu až po ověření jejího kódu.
 
 ## Prezentace jídelníčku
 
