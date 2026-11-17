@@ -30,7 +30,7 @@ class ICanteenTests(unittest.TestCase):
         self.assertEqual([meal['group'] for meal in meals],
                          ['Dop. svačina', 'Oběd', 'Oběd BL', 'Odp. svačina'])
         self.assertEqual(meals[1]['allergens'], '1, 16, 4, 7')
-        self.assertEqual(meals[1]['name'], 'polévka falešná dršťková  treska, brambory')
+        self.assertEqual(meals[1]['name'], 'polévka falešná dršťková treska, brambory')
 
     def test_school_hosted_diet_variant(self):
         html = """<html><title>iCanteen</title><body>
