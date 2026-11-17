@@ -18,6 +18,27 @@ class ICanteenTests(unittest.TestCase):
         self.assertEqual(days[0]['meals'][0], {'name': 'Polévka, kuře s rýží', 'group': 'Oběd 1', 'allergens': '1, 7'})
         self.assertEqual(days[0]['meals'][1]['name'], 'Vegetariánské rizoto')
 
+    def test_hosted_menu_with_diet_and_snacks(self):
+        html = """<html><title>iCanteen</title><body>
+        <div>středa 18.11.2026</div>
+        <div>Dop. svačina</div><div>sýrová s celerem, kornspitz, mléko A: 1,6,7,9;</div>
+        <div>Oběd</div><div>polévka falešná dršťková A: 1,16 treska, brambory A: 4,7;</div>
+        <div>Oběd BL</div><div>polévka falešná dršťková A: 16 treska, brambory A: 4;</div>
+        <div>Odp. svačina</div><div>pomazánka, chléb, čaj A: 1,7;</div>
+        </body></html>""".encode()
+        meals = parse_menu(html)[0]['meals']
+        self.assertEqual([meal['group'] for meal in meals],
+                         ['Dop. svačina', 'Oběd', 'Oběd BL', 'Odp. svačina'])
+        self.assertEqual(meals[1]['allergens'], '1, 16, 4, 7')
+        self.assertEqual(meals[1]['name'], 'polévka falešná dršťková  treska, brambory')
+
+    def test_school_hosted_diet_variant(self):
+        html = """<html><title>iCanteen</title><body>
+        <div>Středa 18.11.2026</div>
+        <div>Oběd BLP</div><div>Kuře s rýží _{(3, 7)}</div>
+        </body></html>""".encode()
+        self.assertEqual(parse_menu(html)[0]['meals'][0]['group'], 'Oběd BLP')
+
     def test_rejects_non_icanteen_page(self):
         with self.assertRaises(MenuError):
             parse_menu(b'<html><body>Obed 1</body></html>')
