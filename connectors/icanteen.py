@@ -87,7 +87,7 @@ def parse_menu(content):
 def source_url(value):
     """Accept a hosted canteen ID or its HTTPS login/base URL."""
     value = str(value or '').strip()
-    if re.fullmatch(r'\\d{4,6}', value):
+    if re.fullmatch(r'\d{4,6}', value):
         return f'https://{HOST}/{value.zfill(4)}/login'
     if not value or len(value) > 250:
         raise MenuError('Zadejte kód jídelny nebo její HTTPS adresu.')
