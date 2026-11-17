@@ -43,6 +43,26 @@ class ICanteenTests(unittest.TestCase):
             with self.assertRaises(MenuError):
                 public_address('example.cz')
 
+    def test_fetch_uses_verified_address_and_keeps_original_source(self):
+        class Response:
+            status = 200
+            def __enter__(self): return self
+            def __exit__(self, *args): return False
+            def stream(self, size): yield HTML
+        class Pool:
+            def __init__(self, address, **kwargs):
+                self.address, self.kwargs = address, kwargs
+            def request(self, method, path, **kwargs):
+                self.path = path
+                return Response()
+            def close(self): pass
+        with patch('connectors.icanteen.public_address', return_value='203.0.113.10') as resolve, \\
+             patch('connectors.icanteen.urllib3.HTTPSConnectionPool', Pool):
+            result = ICanteenConnector().fetch('0340')
+        resolve.assert_called_once_with('strav.nasejidelna.cz')
+        self.assertEqual(result['source'], 'https://strav.nasejidelna.cz/0340/login')
+        self.assertEqual(result['days'][0]['date'], '2026-11-16')
+
     def test_provider_is_registered(self):
         self.assertEqual(app.PROVIDERS['icanteen'].name, 'iCanteen')
 
