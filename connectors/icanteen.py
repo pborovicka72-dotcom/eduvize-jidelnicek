@@ -38,7 +38,7 @@ class TextLines(HTMLParser):
 
     def handle_data(self, data):
         if not self.skipped:
-            self.parts.append(data)
+            self.parts.append(' '.join(data.split()) + ' ')
 
 
 def parse_menu(content):
