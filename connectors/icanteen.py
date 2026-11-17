@@ -1,10 +1,15 @@
 """Read the public iCanteen login-page menu without diner credentials."""
+import ipaddress
 import re
+import socket
+import ssl
 from datetime import datetime
 from html.parser import HTMLParser
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin, urlparse, urlunparse
 
-import requests
+import certifi
+import urllib3
+
 
 from connectors.strava import MenuError
 
@@ -79,33 +84,88 @@ def parse_menu(content):
     return [{'date': date, 'meals': meals} for date, meals in sorted(days.items()) if meals]
 
 
+def source_url(value):
+    """Accept a hosted canteen ID or its HTTPS login/base URL."""
+    value = str(value or '').strip()
+    if re.fullmatch(r'\\d{4,6}', value):
+        return f'https://{HOST}/{value.zfill(4)}/login'
+    if not value or len(value) > 250:
+        raise MenuError('Zadejte kód jídelny nebo její HTTPS adresu.')
+    parsed = urlparse(value)
+    hostname = parsed.hostname
+    if (parsed.scheme != 'https' or not hostname or parsed.username or parsed.password
+            or parsed.port not in (None, 443) or parsed.query or parsed.fragment
+            or not re.fullmatch(r'[A-Za-z0-9.-]+', hostname)
+            or hostname.startswith('.') or '..' in hostname
+            or not hostname.endswith(('.cz', '.sk', '.eu', '.com', '.org', '.net'))):
+        raise MenuError('Zadejte platnou veřejnou HTTPS adresu iCanteen bez parametrů.')
+    try:
+        ipaddress.ip_address(hostname)
+    except ValueError:
+        pass
+    else:
+        raise MenuError('Adresa jídelny musí obsahovat veřejnou doménu.')
+    path = parsed.path.rstrip('/')
+    if not path or not (path.endswith('/login') or path.endswith('.jsp')):
+        path += '/login'
+    if not re.fullmatch(r'/[A-Za-z0-9_./%-]+', path) or '/../' in path + '/':
+        raise MenuError('Neplatná cesta přihlášení iCanteen.')
+    return urlunparse(('https', hostname.lower(), path, '', '', ''))
+
+
+def public_address(hostname):
+    """Resolve before connecting and pin a public IP for the HTTPS request."""
+    try:
+        records = socket.getaddrinfo(hostname, 443, type=socket.SOCK_STREAM)
+        addresses = [item[4][0] for item in records]
+    except OSError as error:
+        raise MenuError('Adresu iCanteen se nepodařilo najít.') from error
+    if not addresses or any(not ipaddress.ip_address(address).is_global for address in addresses):
+        raise MenuError('Adresa iCanteen nesměřuje na veřejný server.')
+    return addresses[0]
+
+
 class ICanteenConnector:
     id = 'icanteen'
     name = 'iCanteen'
 
     def fetch(self, canteen):
-        if not re.fullmatch(r'\d{4,6}', canteen):
-            raise MenuError('Kód jídelny iCanteen musí mít 4 až 6 číslic.')
-        source = f'https://{HOST}/{canteen.zfill(4)}/login'
+        source = source_url(canteen)
         current = source
         for _ in range(4):
             parsed = urlparse(current)
-            if parsed.scheme != 'https' or parsed.hostname != HOST or parsed.port not in (None, 443):
-                raise MenuError('Služba vrátila nepovolené přesměrování.')
+            # Revalidate each redirect and pin the checked address to prevent DNS rebinding.
+            current = source_url(current)
+            parsed = urlparse(current)
+            address = public_address(parsed.hostname)
+            path = parsed.path or '/'
+            pool = urllib3.HTTPSConnectionPool(
+                address, port=443, server_hostname=parsed.hostname,
+                assert_hostname=parsed.hostname, cert_reqs=ssl.CERT_REQUIRED,
+                ca_certs=certifi.where(), timeout=urllib3.Timeout(connect=4, read=15),
+                maxsize=1, block=True)
             try:
-                with requests.get(current, timeout=(4, 15), stream=True, allow_redirects=False,
-                                  headers={'User-Agent': 'EduvizeMenu/1.0', 'Accept': 'text/html'}) as response:
-                    if response.status_code in (301, 302, 303, 307, 308):
-                        current = urljoin(current, response.headers.get('Location', ''))
+                with pool.request('GET', path, headers={
+                        'Host': parsed.hostname, 'User-Agent': 'EduvizeMenu/1.0',
+                        'Accept': 'text/html'}, redirect=False, preload_content=False,
+                        retries=False) as response:
+                    if response.status in (301, 302, 303, 307, 308):
+                        target = response.headers.get('Location', '')
+                        if not target:
+                            raise MenuError('iCanteen vrátil neplatné přesměrování.')
+                        current = urljoin(current, target)
                         continue
-                    response.raise_for_status()
+                    if response.status >= 400:
+                        raise MenuError('iCanteen nyní jídelníček neposkytuje.')
                     body = bytearray()
-                    for chunk in response.iter_content(65536):
+                    for chunk in response.stream(65536):
                         body.extend(chunk)
                         if len(body) > MAX_BYTES:
                             raise MenuError('Jídelníček je příliš velký.')
                 return {'provider': self.id, 'canteen': canteen, 'source': source,
                         'days': parse_menu(bytes(body))}
-            except requests.RequestException as error:
+            except (urllib3.exceptions.HTTPError, OSError) as error:
                 raise MenuError('iCanteen je nyní nedostupný. Zkuste načtení později.') from error
+            finally:
+                pool.close()
         raise MenuError('Příliš mnoho přesměrování služby.')
