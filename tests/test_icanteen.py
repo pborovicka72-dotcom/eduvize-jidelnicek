@@ -6,7 +6,7 @@ import app
 
 HTML = '''<html><head><title>iCanteen</title><script>Oběd 99</script></head><body>
 <div>pondělí&nbsp;16.11.2026</div><div>Oběd 1</div>
-<div>Polévka, kuře s rýží (1, 7)</div>
+<div>Polévka,\n kuře s rýží\n (1, 7)</div>
 <div>Oběd 2</div><div>Vegetariánské rizoto</div>
 <div>úterý 17.11.2026</div><div>Svačina</div><div>Pečivo a čaj [1, 3]</div>
 </body></html>'''.encode()
