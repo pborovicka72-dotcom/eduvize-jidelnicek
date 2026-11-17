@@ -79,7 +79,7 @@ def parse_menu(content):
             codes = re.findall(r'\d{1,2}', allergen.group(1)) if allergen else []
             for item in INLINE_ALLERGENS.finditer(name):
                 codes.extend(re.findall(r'\d{1,2}', item.group(1)))
-            name = INLINE_ALLERGENS.sub('', name).strip(' ,;')
+            name = ' '.join(INLINE_ALLERGENS.sub('', name).split()).strip(' ,;')
             if name:
                 meal = {'name': name, 'group': group, 'allergens': ', '.join(dict.fromkeys(codes))}
                 meals = days.setdefault(day, [])
