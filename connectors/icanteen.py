@@ -97,7 +97,8 @@ def source_url(value):
             or parsed.port not in (None, 443) or parsed.query or parsed.fragment
             or not re.fullmatch(r'[A-Za-z0-9.-]+', hostname)
             or hostname.startswith('.') or '..' in hostname
-            or not hostname.endswith(('.cz', '.sk', '.eu', '.com', '.org', '.net'))):
+            or len(hostname.split('.')) < 2 or len(hostname.rsplit('.', 1)[-1]) < 2
+            or hostname.rsplit('.', 1)[-1] in ('local', 'localhost', 'internal', 'test', 'invalid', 'example')):
         raise MenuError('Zadejte platnou veřejnou HTTPS adresu iCanteen bez parametrů.')
     try:
         ipaddress.ip_address(hostname)
