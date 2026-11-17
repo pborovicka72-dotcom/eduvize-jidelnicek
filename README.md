@@ -42,6 +42,25 @@ Grafika a pravidla velikostí jsou ve sdílených komponentách `meal-board.css`
 Ikony se neřadí do textu jídel. Alergeny doplňku jsou označené jako společné;
 jednotlivým částem doplňku se nepřiřazují odhadované alergeny.
 
+### Členění iCanteen
+
+Volně zapsané obědy doplňuje `connectors/menu_structure.py` o `components` se
+stejnými skupinami jako Strava.cz: `Polévka`, původní `Oběd` (včetně čísla nebo
+dietní varianty) a `Doplněk`. Nápoje a doplňky pak třídí společný `meal-model.js`.
+Příloha zůstává součástí hlavního chodu. Salát uvedený jako hlavní jídlo se
+nepřesune mezi doplňky. Snídaně, svačiny a večeře zůstávají samostatné.
+
+Hranice chodů se určují podle označení polévky, značek alergenů, pomlček a
+čárek mimo závorky se surovinami. Neznámý text se zachová bez vynuceného rozdělení.
+Při rozdělení zůstává původní řádek v `sourceText`; číslo menu a dietní varianta
+se přenášejí i k polévce a doplňkům. Alergeny za celým menu se označují jako
+společné celému menu, nikoli jako přesné alergeny každého chodu.
+
+Regresní případy vycházejí z veřejných menu ověřených 17. 11. 2026:
+`strava.zskomtu.cz/faces/login.jsp` a `strav.nasejidelna.cz/{0463,0316,0248,0022}/login`.
+Nejde o univerzální porozumění libovolnému textu: neoznačená polévka nebo nejasná
+hranice může zůstat v hlavním jídle. Nabídka se kvůli tomu nezkracuje.
+
 ## Ověření
 
 `python -m unittest discover -s tests -v`
