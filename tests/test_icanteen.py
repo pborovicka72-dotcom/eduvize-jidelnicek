@@ -56,8 +56,8 @@ class ICanteenTests(unittest.TestCase):
                 self.path = path
                 return Response()
             def close(self): pass
-        with patch('connectors.icanteen.public_address', return_value='203.0.113.10') as resolve, \\
-             patch('connectors.icanteen.urllib3.HTTPSConnectionPool', Pool):
+        with (patch('connectors.icanteen.public_address', return_value='203.0.113.10') as resolve,
+              patch('connectors.icanteen.urllib3.HTTPSConnectionPool', Pool)):
             result = ICanteenConnector().fetch('0340')
         resolve.assert_called_once_with('strav.nasejidelna.cz')
         self.assertEqual(result['source'], 'https://strav.nasejidelna.cz/0340/login')
