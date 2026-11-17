@@ -16,10 +16,11 @@ function allDays(){return data.days.slice(0,days).map((day,index)=>{
  for(const kind of ['breakfast','soup','lunch','snack','dinner','other','drinks']){
   let meals=records.filter(m=>kind==='other'?['fruit','vegetables','dessert','other'].includes(m.type):m.type===kind);
   if(!meals.length)continue;
-  if(kind==='other'&&meals.every(m=>m.sharedAllergens&&m.allergens===meals[0].allergens))meals=[{...meals[0],name:meals.map(m=>m.name).join(', ')}];
+  if(kind==='other'&&meals.every(m=>m.sharedAllergens&&m.allergens===meals[0].allergens&&m.variant===meals[0].variant&&m.sourceGroup===meals[0].sourceGroup))meals=[{...meals[0],name:meals.map(m=>m.name).join(', ')}];
   groups.push({kind,label:kind==='lunch'?'Hlavní jídla'+(meals.length>1?' · výběr z '+meals.length+' menu':''):kind==='other'?'Doplněk':EduvizeMeals.labels[kind],meals:meals.map(m=>{
    const codes=[...new Set((m.allergens||'').match(/\b\d{1,2}(?=\s*(?:-|,|$))/g)||[])].map(Number).join(', ');
-   return {...m,allergenText:m.sharedAllergens?(codes?'Alergeny celého doplňku: '+codes:'Alergeny doplňku neuvedeny'):(codes?'Alergeny: '+codes:'Alergeny neuvedeny'),allergenTitle:m.allergens};
+   const scope=m.allergenScope==='menu'?'celého menu':m.allergenScope==='section'?'hlavního chodu a doplňků':m.sharedAllergens?'celého doplňku':'';
+   return {...m,allergenText:codes?'Alergeny'+(scope?' '+scope:'')+': '+codes:'Alergeny'+(scope?' '+scope:'')+' neuvedeny',allergenTitle:m.allergens};
   })});
  }
  return {date:day.date,title:title(day.date,index),dateLabel:dateLabel(day.date),groups};

@@ -12,13 +12,12 @@ import urllib3
 
 
 from connectors.strava import MenuError
+from connectors.menu_structure import structure_meal
 
 HOST = 'strav.nasejidelna.cz'
 MAX_BYTES = 2_000_000
 DATE = re.compile(r'(?:(?:pondělí|úterý|středa|čtvrtek|pátek|sobota|neděle)\s+|Jídelníček na\s+)?(\d{1,2})\.(\d{1,2})\.(\d{4})', re.I)
-GROUP = re.compile(r'^(?:Oběd(?:\s*(?:\d+|[A-Z]{2,4}))?|Dop\.\s*svačina|Odp\.\s*svačina|Přesnídávka|Svačina|Večeře(?:\s*\d+)?|Dieta|Polévka)$', re.I)
-INLINE_ALLERGENS = re.compile(r'\bA\s*:\s*((?:\d{1,2}\s*,?\s*)+)', re.I)
-ALLERGENS = re.compile(r'(?:_?\{)?\s*[\[(]\s*(?:A\s*:\s*)?((?:\d{1,2}[a-z]?\s*[,;]?\s*)+)[\])]\s*(?:\})?\s*$', re.I)
+GROUP = re.compile(r'^(?:Oběd(?:\s*(?:[0-9]+|[A-Z]{2,4}))?|Snídaně\s*[0-9]*|Dop\.\s*svač(?:ina|\.)|Odp\.\s*svač(?:ina|\.)|Přesnídávka|Svačina|Večeře(?:\s*[0-9]+)?|Dieta|Polévka)$', re.I)
 
 
 class TextLines(HTMLParser):
@@ -74,14 +73,8 @@ def parse_menu(content):
             if line in ('Přihlašovací jméno', 'Heslo'):
                 group = None
                 continue
-            allergen = ALLERGENS.search(line)
-            name = line[:allergen.start()].strip(' ,;') if allergen else line
-            codes = re.findall(r'\d{1,2}', allergen.group(1)) if allergen else []
-            for item in INLINE_ALLERGENS.finditer(name):
-                codes.extend(re.findall(r'\d{1,2}', item.group(1)))
-            name = ' '.join(INLINE_ALLERGENS.sub('', name).split()).strip(' ,;')
-            if name:
-                meal = {'name': name, 'group': group, 'allergens': ', '.join(dict.fromkeys(codes))}
+            meal = structure_meal(group,line)
+            if meal['name']:
                 meals = days.setdefault(day, [])
                 if meal not in meals:
                     meals.append(meal)

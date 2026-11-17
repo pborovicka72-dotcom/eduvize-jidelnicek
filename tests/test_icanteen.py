@@ -15,7 +15,8 @@ class ICanteenTests(unittest.TestCase):
     def test_public_menu_normalization(self):
         days = parse_menu(HTML)
         self.assertEqual([day['date'] for day in days], ['2026-11-16', '2026-11-17'])
-        self.assertEqual(days[0]['meals'][0], {'name': 'Polévka, kuře s rýží', 'group': 'Oběd 1', 'allergens': '1, 7'})
+        self.assertEqual({k:days[0]['meals'][0][k] for k in ('name','group','allergens')}, {'name': 'Polévka, kuře s rýží', 'group': 'Oběd 1', 'allergens': '1, 7'})
+        self.assertEqual([c['group'] for c in days[0]['meals'][0]['components']],['Polévka','Oběd 1'])
         self.assertEqual(days[0]['meals'][1]['name'], 'Vegetariánské rizoto')
 
     def test_hosted_menu_with_diet_and_snacks(self):
