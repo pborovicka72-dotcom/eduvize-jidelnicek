@@ -33,12 +33,15 @@
  }
  const labels={breakfast:'Snídaně',lunch:'Oběd',dinner:'Večeře',soup:'Polévka',drinks:'Nápoje',fruit:'Ovoce',dessert:'Dezert',vegetables:'Zelenina',snack:'Svačina',other:'Ostatní'};
  function expand(meal){
+  if(Array.isArray(meal.components)&&meal.components.length)return meal.components.flatMap(part=>expand({...meal,components:undefined,...part}));
   const supplement=/^(doplněk|doplnek|ostatní)$/i.test(meal.group.trim());
   const groups=new Map();
   for(const name of supplement?meal.name.split(',').map(x=>x.trim()).filter(Boolean):[meal.name]){
-   const type=kind(meal.group,name),variant=String(meal.group).match(/(?:oběd|obed|menu)\s*(\d+)/i)?.[1]||'';
+   const type=kind(meal.group,name),variant=String(meal.variant||String(meal.group).match(/(?:oběd|obed|menu)\s*([0-9]+|[A-Z]{2,4})\s*$/i)?.[1]||'');
    const key=type+variant;
-   if(!groups.has(key))groups.set(key,{...meal,type,variant,label:supplement?labels[type]:variant?'Oběd · menu '+variant:meal.group,names:[]});
+   const baseLabel=supplement?labels[type]:meal.group.replace(/\s*(?:[0-9]+|[A-Z]{2,4})\s*$/,'').trim();
+   const suffix=variant?(/^[0-9]+$/.test(variant)?' · menu '+variant:' · '+variant):'';
+   if(!groups.has(key))groups.set(key,{...meal,type,variant,label:variant?baseLabel+suffix:supplement?labels[type]:meal.group,names:[]});
    groups.get(key).names.push(name);
   }
   return [...groups.values()].map(x=>({...x,name:x.names.join(', '),sharedAllergens:supplement}));
