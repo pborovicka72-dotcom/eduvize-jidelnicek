@@ -16,8 +16,8 @@ module.exports=async function(){
  assert.throws(()=>a.presentation(config,'kiosk','interactive','menu',{}));passed++;
  const saved=a.save({schemaVersion:1,...config},p);assert.equal(a.native(saved).values.canteen,'11592');assert.equal(a.storedPresentation(saved).mode,'web');assert.equal(saved.data,undefined);passed++;
  for(const patch of [{provider:'other'},{canteen:'1&token=bad'},{allergens:'false'},{name:'x'.repeat(121)},{days:'4'}])assert.throws(()=>a.payload({...config,values:{...config.values,...patch}}));passed++;
- class Node{constructor(){this.style={setProperty(){}};this.children=[];this.textContent='';this.hidden=false;this.parentElement={clientWidth:800};this.className='';this.clientHeight=900;}append(...v){this.children.push(...v);}replaceChildren(...v){this.children=v;}setAttribute(){}getBoundingClientRect(){return {height:40};}remove(){}getContext(){return null;}querySelectorAll(){return [];}querySelector(){return null;}}
- const nodes=new Map(),get=id=>{if(!nodes.has(id))nodes.set(id,new Node());return nodes.get(id);};
+ class Node{constructor(){this.style={setProperty(){}};this.children=[];this.textContent='';this.hidden=false;this.parentElement={clientWidth:800};this.className='';this.clientHeight=900;}append(...v){this.children.push(...v);}replaceChildren(...v){this.children=v;}setAttribute(){}getBoundingClientRect(){return {height:40};}remove(){if(this.id==='menu-app')for(const id of ['menu-app','menu-content','menu-source','menu-subtitle'])nodes.delete(id);}getContext(){return null;}querySelectorAll(){return [];}querySelector(){return null;}}
+ const nodes=new Map(),get=id=>{if(!nodes.has(id)){const value=new Node();value.id=id;nodes.set(id,value);}return nodes.get(id);};
  let hooks,failStatus=0,rendered=[],requests=[];
  const id='a'.repeat(32);
  const ctx={URL,URLSearchParams,AbortController,AbortSignal,Intl,Date,innerWidth:1200,innerHeight:900,
@@ -25,7 +25,7 @@ module.exports=async function(){
   document:{documentElement:{dataset:{menuPublished:'true'},style:{setProperty(){}}},body:{style:{}},getElementById:get,querySelector:()=>null,querySelectorAll:()=>[],createElement:()=>new Node()},
   EduvizeOutputRuntime:{start:o=>{hooks=o;return {stop(){}};}},EduvizeOutputModes:{isInteractive:()=>false},
   EduvizeOutputIntegrity:{menuPublication:'verified-snapshot-v1',applyMenuPublication(){}},
-  EduvizeOutputClient:{create:()=>({getPublicData:async outputId=>{const response=await ctx.fetch('/api/public/v1/outputs/'+outputId+'/data',{credentials:'omit'});return response.json();}})},
+  EduvizeOutputClient:{create:()=>({getPublicData:async outputId=>{const response=await ctx.fetch('/api/public/v1/outputs/'+outputId+'/data',{credentials:'omit'});if(!response.ok){const error=Error('Výstup není dostupný.');error.status=response.status;throw error;}return response.json();}})},
   EduvizeSegmentProfile:{resolve:(width,height)=>({width,height,ratio:width/height})},EduvizeMealBoard:{profile:()=>({gap:12,body:20,first:3,later:3,horizontal:false}),pages:x=>[x],render:(host,group)=>rendered=group},
   EduvizeOutputHeader:{update(){}},getComputedStyle:()=>({fontSize:'16',fontWeight:'400',fontFamily:'sans-serif',getPropertyValue:()=>''}),
   addEventListener(){},setInterval:()=>1,clearInterval(){},requestAnimationFrame:fn=>fn(),cancelAnimationFrame(){},
