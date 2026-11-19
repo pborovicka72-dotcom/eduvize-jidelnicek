@@ -1,7 +1,13 @@
 /* App-owned saved settings adapter. Slot identity and actions belong to shared V2. */
 (function(root){'use strict';
+ function validSource(provider,source){
+  if(!['strava','icanteen'].includes(provider)||typeof source!=='string')return false;
+  if(/^[0-9]{4,6}$/.test(source))return true;
+  if(provider!=='icanteen'||source.length>250)return false;
+  try{const u=new URL(source);return u.protocol==='https:'&&!!u.hostname&&u.hostname.includes('.')&&!u.username&&!u.password&&!u.search&&!u.hash&&(!u.port||u.port==='443')}catch{return false}
+ }
  function payload(config){
-  const v=config?.values;if(!v||v.provider!=='strava'||!/^[0-9]{4,6}$/.test(v.canteen||'')||typeof v.name!=='string'||v.name.length>120||/[\x00-\x1f]/.test(v.name)||!['day','overview'].includes(v.presentation)||typeof v.allergens!=='boolean'||typeof v.showTime!=='boolean')throw Error('Neplatné nastavení jídelníčku.');
+  const v=config?.values;if(!v||!validSource(v.provider,v.canteen)||typeof v.name!=='string'||v.name.length>120||/[\x00-\x1f]/.test(v.name)||!['day','overview'].includes(v.presentation)||typeof v.allergens!=='boolean'||typeof v.showTime!=='boolean')throw Error('Neplatné nastavení jídelníčku.');
   const days=v.presentation==='day'?1:Number(v.days);
   if(v.presentation==='overview'&&![3,5,10].includes(days))throw Error('Neplatný počet dnů.');
   return {provider:v.provider,canteen:v.canteen,name:v.name,days,presentation:v.presentation,allergens:v.allergens,showTime:v.showTime};
