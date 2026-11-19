@@ -24,6 +24,7 @@ module.exports=async function(){
   location:{origin:'https://test.skola.eduvize.cz',search:'?edu-output='+id+'&canteen=66666&edu-profile=private&name=forged'},
   document:{documentElement:{dataset:{menuPublished:'true'},style:{setProperty(){}}},body:{style:{}},getElementById:get,querySelector:()=>null,createElement:()=>new Node()},
   EduvizeOutputRuntime:{start:o=>{hooks=o;return {stop(){}};}},EduvizeOutputModes:{isInteractive:()=>false},
+  EduvizeOutputIntegrity:{menuPublication:'verified-snapshot-v1',applyMenuPublication(){}},
   EduvizeSegmentProfile:{resolve:(width,height)=>({width,height,ratio:width/height})},EduvizeMealBoard:{profile:()=>({gap:12,body:20,first:3,later:3,horizontal:false}),pages:x=>[x],render:(host,group)=>rendered=group},
   EduvizeOutputHeader:{update(){}},getComputedStyle:()=>({fontSize:'16',fontWeight:'400',fontFamily:'sans-serif',getPropertyValue:()=>''}),
   addEventListener(){},setInterval:()=>1,clearInterval(){},requestAnimationFrame(){},cancelAnimationFrame(){},
