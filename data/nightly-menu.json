@@ -7,31 +7,6 @@
       "source": "https://www.strava.cz/strava5/Jidelnicky/XML?zarizeni=11592",
       "days": [
         {
-          "date": "2026-11-18",
-          "meals": [
-            {
-              "name": "Gulášová polévka",
-              "group": "Polévka",
-              "allergens": "01 -Obiloviny obsahující lepek,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Zapečené špagety s vepřovým masem a rajčaty",
-              "group": "Oběd 1",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Tofu ala kokosové kari, Dušená rýže Basmati",
-              "group": "Oběd 2",
-              "allergens": "01 -Obiloviny obsahující lepek,06 -Sójové boby (sója),07 -Mléko,08 -Ořechy, mandle, pistácie,09 -Celer"
-            },
-            {
-              "name": "Čaj ovocný, Mléko, Ochucené mléko,Voda, Ovoce, Zelenina",
-              "group": "Doplněk",
-              "allergens": "07 -Mléko"
-            }
-          ]
-        },
-        {
           "date": "2026-11-19",
           "meals": [
             {
@@ -232,7 +207,7 @@
           ]
         }
       ],
-      "updated": 1794986994.885096
+      "updated": 1795073278.47866
     }
   }
 }
