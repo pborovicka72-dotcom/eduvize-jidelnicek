@@ -39,7 +39,7 @@ module.exports=async function(){
  assert.equal(get('menu-subtitle').textContent,'Škola A');assert.equal(rendered[0].groups[0].meals[0].name,'Rajčatová polévka');passed++;
  await hooks.render({id,payload:{...payload,name:'Škola B'},presentation:p},{},{signal});
  assert.equal(get('menu-subtitle').textContent,'Škola B');assert.equal(requests[1].url,requests[0].url);passed++;
- failStatus=503;const before=rendered;await hooks.render({id,payload:{...payload,name:'Unavailable'},presentation:p},{},{signal});assert.equal(rendered,before);assert.equal(get('menu-subtitle').textContent,'Škola B');passed++;
+ failStatus=503;const before=rendered;await hooks.render({id,payload:{...payload,name:'Unavailable'},presentation:p},{},{signal});assert.equal(rendered,before);assert.equal(ctx.document.documentElement.dataset.menuPublicPhase,'error');assert.equal(get('menu-subtitle').textContent,'');passed++;
  failStatus=410;await hooks.render({id,payload,presentation:p},{},{signal});assert.equal(get('menu-content').children.length,0);assert.equal(get('menu-source').children.length,0);passed++;
  hooks.clear();assert.equal(get('menu-subtitle').textContent,'');passed++;
  console.log(passed+' menu registry JS behavior checks PASS');return passed;
