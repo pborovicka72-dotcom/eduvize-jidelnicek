@@ -1,6 +1,6 @@
 # Eduvize · Jídelníček
 
-První konektor: veřejný XML jídelníček Strava.cz. Ověřená jídelna: **11592**.
+Konektory: veřejný XML jídelníček Strava.cz a veřejný jídelníček na přihlašovací stránce iCanteen (hostovaná i vlastní HTTPS doména). Ověřená jídelna: **11592**.
 Nepracuje s účty strávníků ani s objednáváním jídel.
 
 ## Spuštění
@@ -21,6 +21,10 @@ v paměti procesu; po restartu ji může naplnit poslední platný noční sním
 Dokumentace poskytovatele:
 https://www.strava.cz/strava/napoveda/cz/prilohy/Odkaz_na_XML_jidelnicek.pdf
 
+iCanteen se vybírá jako druhá služba v administraci. Lze zadat kód hostované jídelny, například `0340`, nebo její HTTPS adresu, například `https://strav.nasejidelna.cz/0340` či `https://englisova.skolnijidelny.cz/login`. Konektor čte pouze veřejně zobrazený jídelníček a nepotřebuje účet strávníka. Každý vlastní server musí před zapojením školy projít testem dostupnosti a formátu. Do `nightly-sources.json` přidejte konkrétní jídelnu až po ověření její adresy.
+
+Oficiální [uživatelský manuál iCanteen](https://strav.nasejidelna.cz/0345/help) popisuje přihlášení jménem a heslem a možnost vlastního webserveru. [Výrobce Z-WARE](https://nasejidelna.cz/) uvádí hostování i varianty nastavení. Veřejný popis integračního API ani smlouvu pro strojové čtení soukromého jídelníčku tyto zdroje neobsahují. Proto se heslo do profilu ani veřejného odkazu neukládá. Pokud konkrétní škola veřejný jídelníček nezveřejňuje, je pro další konektor potřeba její URL, testovací účet a rozhraní či souhlas dodavatele.
+
 ## Prezentace jídelníčku
 
 `presentation=day` zobrazí nejbližší celý den. `presentation=overview&days=5`
@@ -37,6 +41,25 @@ Grafika a pravidla velikostí jsou ve sdílených komponentách `meal-board.css`
 `meal-board.js` centrálního design systému. Hlavička používá jeho společné metriky.
 Ikony se neřadí do textu jídel. Alergeny doplňku jsou označené jako společné;
 jednotlivým částem doplňku se nepřiřazují odhadované alergeny.
+
+### Členění iCanteen
+
+Volně zapsané obědy doplňuje `connectors/menu_structure.py` o `components` se
+stejnými skupinami jako Strava.cz: `Polévka`, původní `Oběd` (včetně čísla nebo
+dietní varianty) a `Doplněk`. Nápoje a doplňky pak třídí společný `meal-model.js`.
+Příloha zůstává součástí hlavního chodu. Salát uvedený jako hlavní jídlo se
+nepřesune mezi doplňky. Snídaně, svačiny a večeře zůstávají samostatné.
+
+Hranice chodů se určují podle označení polévky, značek alergenů, pomlček a
+čárek mimo závorky se surovinami. Neznámý text se zachová bez vynuceného rozdělení.
+Při rozdělení zůstává původní řádek v `sourceText`; číslo menu a dietní varianta
+se přenášejí i k polévce a doplňkům. Alergeny za celým menu se označují jako
+společné celému menu, nikoli jako přesné alergeny každého chodu.
+
+Regresní případy vycházejí z veřejných menu ověřených 17. 11. 2026:
+`strava.zskomtu.cz/faces/login.jsp` a `strav.nasejidelna.cz/{0463,0316,0248,0022}/login`.
+Nejde o univerzální porozumění libovolnému textu: neoznačená polévka nebo nejasná
+hranice může zůstat v hlavním jídle. Nabídka se kvůli tomu nezkracuje.
 
 ## Ověření
 

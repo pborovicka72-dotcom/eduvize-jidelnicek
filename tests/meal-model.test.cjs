@@ -18,3 +18,17 @@ test('supplement categories preserve source allergens and their whole-supplement
 test('unknown meal descriptions stay in Other without rewriting food names',()=>{
  const meal=model.expand({group:'Doplněk',name:'Překvapení kuchaře',allergens:''})[0];assert.equal(meal.type,'other');assert.equal(meal.name,'Překvapení kuchaře');assert.equal(model.kind('Oběd','Mléko a pečivo'),'lunch');
 });
+test('structured iCanteen courses use the same groups as Strava and keep diet variants',()=>{
+ const courses=model.expand({group:'Oběd BLP',name:'Původní celý text',allergens:'1,7',components:[
+  {group:'Polévka',name:'Vývar',variant:'BLP',sourceGroup:'Oběd BLP',allergens:'9',allergenScope:'course'},
+  {group:'Oběd BLP',name:'Kuře, rýže',variant:'BLP',sourceGroup:'Oběd BLP',allergens:'7',allergenScope:'section'},
+  {group:'Doplněk',name:'Ovoce',variant:'BLP',sourceGroup:'Oběd BLP',allergens:'7',allergenScope:'section'}]});
+ assert.deepEqual(Array.from(courses,x=>x.type),['soup','lunch','fruit']);
+ assert.deepEqual(Array.from(courses,x=>x.label),['Polévka · BLP','Oběd · BLP','Ovoce · BLP']);
+ assert.equal(courses[0].allergens,'9');assert.equal(courses[1].name,'Kuře, rýže');assert.equal(courses[2].allergenScope,'section');
+});
+test('a full-menu allergen list is never promoted to per-course certainty',()=>{
+ const result=model.expand({group:'Oběd1',name:'Menu',components:[{group:'Polévka',name:'Zelná',variant:'1',allergenScope:'menu',allergens:'1,7'},{group:'Oběd1',name:'Rizoto',variant:'1',allergenScope:'menu',allergens:'1,7'}]});
+ assert.deepEqual(Array.from(result,x=>x.type),['soup','lunch']);
+ assert.ok(result.every(x=>x.allergenScope==='menu'));assert.equal(result[0].label,'Polévka · menu 1');
+});

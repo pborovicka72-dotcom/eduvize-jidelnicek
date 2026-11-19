@@ -7,177 +7,27 @@
       "source": "https://www.strava.cz/strava5/Jidelnicky/XML?zarizeni=11592",
       "days": [
         {
-          "date": "2026-11-09",
-          "meals": [
-            {
-              "name": "Brokolicový krém",
-              "group": "Polévka",
-              "allergens": "01 -Obiloviny obsahující lepek,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Masové koule v rajčatové omáčce, Těstoviny",
-              "group": "Oběd 1",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Kuskus salát s vejcem, Pečivo",
-              "group": "Oběd 2",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Doplněk",
-              "group": "Doplněk",
-              "allergens": ""
-            }
-          ]
-        },
-        {
-          "date": "2026-11-10",
-          "meals": [
-            {
-              "name": "Kuřecí polévka",
-              "group": "Polévka",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Kuřecí paličky Kentucky, Americké brambory, Salát Coleslaw",
-              "group": "Oběd 1",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,10 -Hořčice"
-            },
-            {
-              "name": "Gnocchi se zeleninovým ragú",
-              "group": "Oběd 2",
-              "allergens": "01 -Obiloviny obsahující lepek,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Doplněk",
-              "group": "Doplněk",
-              "allergens": ""
-            }
-          ]
-        },
-        {
-          "date": "2026-11-11",
-          "meals": [
-            {
-              "name": "Polévka zeleninová krémová",
-              "group": "Polévka",
-              "allergens": "01 -Obiloviny obsahující lepek,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Mexický guláš, Cizrnový chléb",
-              "group": "Oběd 1",
-              "allergens": "01 -Obiloviny obsahující lepek,06 -Sójové boby (sója),07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Květák smažený, Americké brambory",
-              "group": "Oběd 2",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Doplněk",
-              "group": "Doplněk",
-              "allergens": ""
-            }
-          ]
-        },
-        {
-          "date": "2026-11-12",
-          "meals": [
-            {
-              "name": "Polévka hrstková",
-              "group": "Polévka",
-              "allergens": "01 -Obiloviny obsahující lepek,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Vepřové na přírodno, Dušená rýže Basmati",
-              "group": "Oběd 1",
-              "allergens": "01 -Obiloviny obsahující lepek"
-            },
-            {
-              "name": "Asijská směs, Bulgur",
-              "group": "Oběd 2",
-              "allergens": "01 -Obiloviny obsahující lepek,06 -Sójové boby (sója),09 -Celer"
-            },
-            {
-              "name": "Doplněk",
-              "group": "Doplněk",
-              "allergens": ""
-            }
-          ]
-        },
-        {
-          "date": "2026-11-13",
-          "meals": [
-            {
-              "name": "Polévka houbová z hlívy ústřičné (á la dršťková)",
-              "group": "Polévka",
-              "allergens": "01 -Obiloviny obsahující lepek,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Rybí filé na másle, Bramborová kaše",
-              "group": "Oběd 1",
-              "allergens": "01 -Obiloviny obsahující lepek,04 -Ryby,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Zeleninový burger",
-              "group": "Oběd 2",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Doplněk",
-              "group": "Doplněk",
-              "allergens": ""
-            }
-          ]
-        },
-        {
-          "date": "2026-11-18",
-          "meals": [
-            {
-              "name": "Polévka",
-              "group": "Polévka",
-              "allergens": ""
-            },
-            {
-              "name": "Oběd",
-              "group": "Oběd 1",
-              "allergens": ""
-            },
-            {
-              "name": "Oběd 2",
-              "group": "Oběd 2",
-              "allergens": ""
-            },
-            {
-              "name": "Doplněk",
-              "group": "Doplněk",
-              "allergens": ""
-            }
-          ]
-        },
-        {
           "date": "2026-11-19",
           "meals": [
             {
-              "name": "Polévka",
+              "name": "Hovězí polévka s těstovinou",
               "group": "Polévka",
-              "allergens": ""
+              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,09 -Celer"
             },
             {
-              "name": "Oběd",
+              "name": "Hovězí maso na smetaně, Houskové knedlíky",
               "group": "Oběd 1",
-              "allergens": ""
+              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko,09 -Celer"
             },
             {
-              "name": "Oběd 2",
+              "name": "Rybí filé s rajčaty, bazalkou a mozzarelou, Brambor",
               "group": "Oběd 2",
-              "allergens": ""
+              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,04 -Ryby,07 -Mléko"
             },
             {
-              "name": "Doplněk",
+              "name": "Čaj ovocný, Mléko, Ovoce, Voda, Zeleninová obloha",
               "group": "Doplněk",
-              "allergens": ""
+              "allergens": "07 -Mléko"
             }
           ]
         },
@@ -185,24 +35,24 @@
           "date": "2026-11-20",
           "meals": [
             {
-              "name": "Polévka",
+              "name": "Pohanková polévka se zeleninou",
               "group": "Polévka",
-              "allergens": ""
+              "allergens": "01 -Obiloviny obsahující lepek,09 -Celer"
             },
             {
-              "name": "Oběd",
+              "name": "Vepřové na přírodno, Hráškové pyré",
               "group": "Oběd 1",
-              "allergens": ""
+              "allergens": "01 -Obiloviny obsahující lepek,07 -Mléko,09 -Celer"
             },
             {
-              "name": "Oběd 2",
+              "name": "Čočka na kyselo, Vejce vařené, Okurka sterilovaná",
               "group": "Oběd 2",
-              "allergens": ""
+              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,09 -Celer,10 -Hořčice"
             },
             {
-              "name": "Doplněk",
+              "name": "Čaj ovocný, Mléko, Ochucené mléko, Voda, Mléčný pátek",
               "group": "Doplněk",
-              "allergens": ""
+              "allergens": "07 -Mléko"
             }
           ]
         },
@@ -357,7 +207,7 @@
           ]
         }
       ],
-      "updated": 1794100705.925469
+      "updated": 1795073278.47866
     }
   }
 }
