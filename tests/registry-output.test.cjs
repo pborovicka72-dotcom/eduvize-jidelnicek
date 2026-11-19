@@ -22,12 +22,13 @@ module.exports=async function(){
  const id='a'.repeat(32);
  const ctx={URL,URLSearchParams,AbortController,AbortSignal,Intl,Date,innerWidth:1200,innerHeight:900,
   location:{origin:'https://test.skola.eduvize.cz',search:'?edu-output='+id+'&canteen=66666&edu-profile=private&name=forged'},
-  document:{documentElement:{dataset:{menuPublished:'true'},style:{setProperty(){}}},body:{style:{}},getElementById:get,querySelector:()=>null,createElement:()=>new Node()},
+  document:{documentElement:{dataset:{menuPublished:'true'},style:{setProperty(){}}},body:{style:{}},getElementById:get,querySelector:()=>null,querySelectorAll:()=>[],createElement:()=>new Node()},
   EduvizeOutputRuntime:{start:o=>{hooks=o;return {stop(){}};}},EduvizeOutputModes:{isInteractive:()=>false},
   EduvizeOutputIntegrity:{menuPublication:'verified-snapshot-v1',applyMenuPublication(){}},
+  EduvizeOutputClient:{create:()=>({getPublicData:async outputId=>{const response=await ctx.fetch('/api/public/v1/outputs/'+outputId+'/data',{credentials:'omit'});return response.json();}})},
   EduvizeSegmentProfile:{resolve:(width,height)=>({width,height,ratio:width/height})},EduvizeMealBoard:{profile:()=>({gap:12,body:20,first:3,later:3,horizontal:false}),pages:x=>[x],render:(host,group)=>rendered=group},
   EduvizeOutputHeader:{update(){}},getComputedStyle:()=>({fontSize:'16',fontWeight:'400',fontFamily:'sans-serif',getPropertyValue:()=>''}),
-  addEventListener(){},setInterval:()=>1,clearInterval(){},requestAnimationFrame(){},cancelAnimationFrame(){},
+  addEventListener(){},setInterval:()=>1,clearInterval(){},requestAnimationFrame:fn=>fn(),cancelAnimationFrame(){},
   fetch:async(url,options)=>{requests.push({url,options});return {ok:!failStatus,status:failStatus||200,json:async()=>failStatus?{error:{message:'no'}}:{schemaVersion:1,stale:false,complete:true,data:{provider:'strava',canteen:'11592',source:'https://www.strava.cz/',updated:Date.now()/1000,today:'2026-11-08',days:[{date:'2026-11-09',meals:[{name:'Rajčatová polévka',group:'Polévka',allergens:'07'}]}]}}};}
  };ctx.window=ctx;
  vm.runInNewContext(source('meal-model.js'),ctx);vm.runInNewContext(source('menu.js'),ctx);
