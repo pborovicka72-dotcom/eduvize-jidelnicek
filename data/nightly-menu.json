@@ -7,31 +7,6 @@
       "source": "https://www.strava.cz/strava5/Jidelnicky/XML?zarizeni=11592",
       "days": [
         {
-          "date": "2026-11-20",
-          "meals": [
-            {
-              "name": "Pohanková polévka se zeleninou",
-              "group": "Polévka",
-              "allergens": "01 -Obiloviny obsahující lepek,09 -Celer"
-            },
-            {
-              "name": "Vepřové na přírodno, Hráškové pyré",
-              "group": "Oběd 1",
-              "allergens": "01 -Obiloviny obsahující lepek,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Čočka na kyselo, Vejce vařené, Okurka sterilovaná",
-              "group": "Oběd 2",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,09 -Celer,10 -Hořčice"
-            },
-            {
-              "name": "Čaj ovocný, Mléko, Ochucené mléko, Voda, Mléčný pátek",
-              "group": "Doplněk",
-              "allergens": "07 -Mléko"
-            }
-          ]
-        },
-        {
           "date": "2026-11-23",
           "meals": [
             {
@@ -182,7 +157,7 @@
           ]
         }
       ],
-      "updated": 1795159061.960565
+      "updated": 1795244992.736084
     }
   }
 }
