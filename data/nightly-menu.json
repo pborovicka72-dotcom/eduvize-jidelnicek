@@ -7,31 +7,6 @@
       "source": "https://www.strava.cz/strava5/Jidelnicky/XML?zarizeni=11592",
       "days": [
         {
-          "date": "2026-11-23",
-          "meals": [
-            {
-              "name": "Polévka cibulová s brambory",
-              "group": "Polévka",
-              "allergens": "01 -Obiloviny obsahující lepek,07 -Mléko,09 -Celer"
-            },
-            {
-              "name": "Rybí prsty, Bramborová kaše, Okurka sterilovaná",
-              "group": "Oběd 1",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,04 -Ryby,07 -Mléko,09 -Celer,10 -Hořčice"
-            },
-            {
-              "name": "Cizrna na paprice, Těstoviny",
-              "group": "Oběd 2",
-              "allergens": "01 -Obiloviny obsahující lepek,03 -Vejce,07 -Mléko"
-            },
-            {
-              "name": "Čaj ovocný, Mléko, Ochucené mléko,Voda, Ovoce, Zelenina",
-              "group": "Doplněk",
-              "allergens": "07 -Mléko"
-            }
-          ]
-        },
-        {
           "date": "2026-11-24",
           "meals": [
             {
@@ -157,7 +132,7 @@
           ]
         }
       ],
-      "updated": 1795419627.828134
+      "updated": 1795514149.15923
     }
   }
 }
